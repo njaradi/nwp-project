@@ -1,0 +1,21 @@
+<header>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+      <a [routerLink]="'/'" class="navbar-brand">Magla</a>
+      <div class="collapse navbar-collapse justify-content-between" id="navbarNavAltMarkup">
+        <div class="navbar-nav">
+          <a [routerLink]="'/'" class="nav-link active" aria-current="page">Machines</a>
+          <a [routerLink]="'/users'" class="nav-link active" aria-current="page">Users</a>
+          <a [routerLink]="'/login'" class="nav-link active" aria-current="page">Login</a>
+          <a [routerLink]="'/error'" class="nav-link active" aria-current="page">Error History</a>
+
+        </div>
+
+      </div>
+    </div>
+  </nav>
+</header>
+
+<div class="container pt-3">
+  <router-outlet></router-outlet>
+</div>

@@ -1,4 +1,4 @@
-# FeNwp
+# Frontend of the project from the course Advanced Web Programming
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 16.2.0.
 

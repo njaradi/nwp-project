@@ -1,1 +1,24 @@
 <p>error-page works!</p>
+
+<div class="container mt-4">
+  <h2>Error History</h2>
+  <table class="table table-hover mt-3">
+    <thead class="table-light">
+    <tr>
+      <th>Machine Name</th>
+      <th>Date</th>
+      <th>Operation</th>
+      <th>Message</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let e of errors">
+      <td>{{ e.machineName}}</td>
+      <td>{{ e.date }}</td>
+      <td>{{ e.operation }}</td>
+      <td>{{ e.message }}</td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+

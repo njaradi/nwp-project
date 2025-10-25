@@ -1,1 +1,20 @@
 <p>user-form works!</p>
+
+<form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+  <div>
+    <label>Name:</label>
+    <input formControlName="name" type="text" />
+  </div>
+
+  <div>
+    <label>Email:</label>
+    <input formControlName="email" type="email" />
+  </div>
+
+  <div>
+    <label>Role:</label>
+    <input formControlName="role" type="text" />
+  </div>
+
+  <button type="submit">{{ user ? 'Update User' : 'Create User' }}</button>
+</form>

@@ -12,6 +12,8 @@ import { MachinesPageComponent } from './components/machines-page/machines-page.
 import { FilterMachinesComponent } from './components/filter-machines/filter-machines.component';
 import { NewMachineComponent } from './components/new-machine/new-machine.component';
 import { ErrorPageComponent } from './components/error-page/error-page.component';
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+
 
 @NgModule({
   declarations: [
@@ -28,7 +30,8 @@ import { ErrorPageComponent } from './components/error-page/error-page.component
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

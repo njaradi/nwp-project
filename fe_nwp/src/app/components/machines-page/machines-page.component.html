@@ -1,1 +1,45 @@
 <p>machines-page works!</p>
+<div class="container mt-4">
+
+  <!-- Filters -->
+  <div class="d-flex align-items-center gap-2 mb-3">
+    <input type="text" class="form-control" placeholder="Name" [(ngModel)]="nameInput">
+
+    <select class="form-select" [(ngModel)]="stateInput">
+      <option value="">State</option>
+      <option *ngFor="let s of states" [value]="s">{{ s }}</option>
+    </select>
+
+    <input type="date" class="form-control" [(ngModel)]="dateInput">
+
+    <button class="btn btn-success" (click)="addVm()">+</button>
+  </div>
+
+  <!-- VM Cards -->
+  <div class="row g-3">
+    <div *ngFor="let vm of vmList" class="col-md-4">
+      <div class="card h-100 border border-2 position-relative"
+           [ngClass]="{'border-primary': vm.state === 'Running',
+                       'border-danger': vm.state === 'Crashed',
+                       'border-secondary': vm.state === 'Stopped',
+                       'border-warning': vm.state === 'Restoring'}">
+
+        <div class="card-body">
+          <h5 class="card-title">{{ vm.name }}</h5>
+          <p class="card-text mb-1"><strong>State:</strong> {{ vm.state }}</p>
+          <p class="card-text"><strong>Date:</strong> {{ vm.date }}</p>
+
+          <div class="d-flex flex-wrap gap-2">
+            <button class="btn btn-outline-secondary btn-sm" (click)="shutdown(vm)">Shut&nbsp;Down</button>
+            <button class="btn btn-outline-info btn-sm" (click)="restart(vm)">Restart</button>
+          </div>
+        </div>
+
+        <button class="btn btn-outline-danger position-absolute top-0 end-0 m-2 btn-sm"
+                (click)="deleteVm(vm.id)">Delete
+          <i class="bi bi-trash"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

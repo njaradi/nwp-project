@@ -1,12 +1,7 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {User} from "../../model";
 
-export interface User {
-  id?: number;
-  name: string;
-  email: string;
-  role: string;
-}
 
 @Component({
   selector: 'app-user-form',

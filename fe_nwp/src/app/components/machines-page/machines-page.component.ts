@@ -1,12 +1,6 @@
 import { Component } from '@angular/core';
+import {VmCard} from "../../model";
 
-
-interface VmCard {
-  id: number;
-  name: string;
-  state: string;
-  date: string;
-}
 
 @Component({
   selector: 'app-machines-page',
@@ -25,22 +19,26 @@ export class MachinesPageComponent {
 
     nameInput = '';
     stateInput = '';
-    dateInput = '';
+    dateFromInput = '';
+    dateToInput = '';
 
     states = ['Running', 'Stopped', 'Crashed', 'Restarting'];
 
-    addVm() {
-      if (!this.nameInput || !this.stateInput || !this.dateInput) return;
-      this.vmList.push({
-        id: this.nextId++,
-        name: this.nameInput,
-        state: this.stateInput,
-        date: this.dateInput
-      });
-      this.nameInput = '';
-      this.stateInput = '';
-      this.dateInput = '';
+    filterMachines(){
+
     }
+    // addVm() {
+    //   if (!this.nameInput || !this.stateInput || !this.dateInput) return;
+    //   this.vmList.push({
+    //     id: this.nextId++,
+    //     name: this.nameInput,
+    //     state: this.stateInput,
+    //     date: this.dateInput
+    //   });
+    //   this.nameInput = '';
+    //   this.stateInput = '';
+    //   this.dateInput = '';
+    // }
 
     deleteVm(id: number) {
       this.vmList = this.vmList.filter(vm => vm.id !== id);

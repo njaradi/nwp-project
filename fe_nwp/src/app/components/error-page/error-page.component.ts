@@ -1,12 +1,6 @@
 import { Component } from '@angular/core';
+import {Error} from "../../model";
 
-interface Error {
-  id: number;
-  machineName: string,
-  date: string;
-  operation: string;
-  message: string;
-}
 @Component({
   selector: 'app-error-page',
   templateUrl: './error-page.component.html',

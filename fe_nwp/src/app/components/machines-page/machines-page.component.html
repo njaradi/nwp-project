@@ -10,9 +10,10 @@
       <option *ngFor="let s of states" [value]="s">{{ s }}</option>
     </select>
 
-    <input type="date" class="form-control" [(ngModel)]="dateInput">
+    <input type="date" class="form-control" [(ngModel)]="dateFromInput">
+    <input type="date" class="form-control" [(ngModel)]="dateToInput">
 
-    <button class="btn btn-success" (click)="addVm()">+</button>
+    <button class="btn btn-success" (click)="filterMachines()">+</button>
   </div>
 
   <!-- VM Cards -->

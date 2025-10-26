@@ -1,12 +1,6 @@
 import { Component } from '@angular/core';
+import {User} from "../../model";
 
-
-interface User {
-  id: number;
-  name: string;
-  email: string;
-  role: string;
-}
 @Component({
   selector: 'app-users-page',
   templateUrl: './users-page.component.html',

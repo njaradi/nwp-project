@@ -1,29 +1,56 @@
-<p>machines-page works!</p>
 <div class="container mt-4">
 
-  <!-- Filters -->
-  <div class="d-flex align-items-center gap-2 mb-3">
-    <input type="text" class="form-control" placeholder="Name" [(ngModel)]="nameInput">
+  <!-- Filter Row -->
+  <div class="row g-2 mb-3 align-items-center">
+    <div class="col-md-3">
+      <input type="text" class="form-control" placeholder="Filter by name" [(ngModel)]="filterName">
+    </div>
 
-    <select class="form-select" [(ngModel)]="stateInput">
-      <option value="">State</option>
-      <option *ngFor="let s of states" [value]="s">{{ s }}</option>
-    </select>
+    <div class="col-md-2">
+      <select class="form-select" [(ngModel)]="filterState">
+        <option value="">All states</option>
+        <option *ngFor="let s of states" [value]="s">{{ s }}</option>
+      </select>
+    </div>
 
-    <input type="date" class="form-control" [(ngModel)]="dateFromInput">
-    <input type="date" class="form-control" [(ngModel)]="dateToInput">
+    <div class="col-md-3">
+      <input type="date" class="form-control" [(ngModel)]="filterDateFrom" placeholder="From date">
+    </div>
 
-    <button class="btn btn-success" (click)="filterMachines()">+</button>
+    <div class="col-md-3">
+      <input type="date" class="form-control" [(ngModel)]="filterDateTo" placeholder="To date">
+    </div>
   </div>
 
-  <!-- VM Cards -->
-  <div class="row g-3">
-    <div *ngFor="let vm of vmList" class="col-md-4">
+  <!-- Add VM Row -->
+  <div class="d-flex align-items-center gap-2 mb-4">
+    <button class="btn btn-secondary" (click)="showAddForm = !showAddForm">
+      {{ showAddForm ? 'Cancel' : 'New Machine' }}
+    </button>
+
+    <div class="add-form" [class.show]="showAddForm">
+      <input type="text"
+             class="form-control"
+             placeholder="Machine name"
+             [(ngModel)]="newVmName"
+             (keyup.enter)="addVm()" />
+      <button class="btn btn-primary" (click)="addVm()">Create</button>
+    </div>
+  </div>
+
+
+  <!-- VM Grid -->
+  <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+    <div *ngFor="let vm of filteredVmList" class="col">
       <div class="card h-100 border border-2 position-relative"
-           [ngClass]="{'border-primary': vm.state === 'Running',
-                       'border-danger': vm.state === 'Crashed',
-                       'border-secondary': vm.state === 'Stopped',
-                       'border-warning': vm.state === 'Restoring'}">
+           [ngClass]="{
+             'border-primary': vm.state === 'Running',
+             'border-danger': vm.state === 'Crashed',
+             'border-secondary': vm.state === 'Stopped',
+             'border-warning': vm.state === 'Restarting',
+             'border-info': vm.state === 'Turning off',
+             'border-success': vm.state ==='Turning on'
+           }">
 
         <div class="card-body">
           <h5 class="card-title">{{ vm.name }}</h5>
@@ -31,7 +58,7 @@
           <p class="card-text"><strong>Date:</strong> {{ vm.date }}</p>
 
           <div class="d-flex flex-wrap gap-2">
-            <button class="btn btn-outline-secondary btn-sm" (click)="shutdown(vm)">Shut&nbsp;Down</button>
+            <button class="btn btn-outline-secondary btn-sm" (click)="shutdown(vm)">Shut Down</button>
             <button class="btn btn-outline-info btn-sm" (click)="restart(vm)">Restart</button>
           </div>
         </div>

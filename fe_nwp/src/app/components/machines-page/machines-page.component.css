@@ -4,3 +4,27 @@
 .card:hover {
   transform: scale(1.02);
 }
+
+.add-form-wrapper {
+  overflow: hidden;
+  transition: all 0.35s cubic-bezier(0.25, 1.25, 0.5, 1);
+}
+
+.add-form {
+  display: inline-flex;
+  gap: 0.5rem;
+  align-items: center;
+  opacity: 0;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.25s ease, opacity 0.25s ease;
+  width: 0;
+  overflow: hidden;
+}
+
+.add-form.show {
+  transform: scaleX(1);
+  opacity: 1;
+  width: auto;
+}
+

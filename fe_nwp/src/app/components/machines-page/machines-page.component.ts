@@ -13,7 +13,7 @@ export class MachinesPageComponent {
       { id: 1, name: 'VM Alpha', state: 'Running', date: '2025-10-20' },
       { id: 2, name: 'VM Beta', state: 'Stopped', date: '2025-10-22' },
       { id: 3, name: 'VM Gamma', state: 'Crashed', date: '2025-10-23' },
-      { id: 4, name: 'VM Delta', state: 'Restoring', date: '2025-10-24' },
+      { id: 4, name: 'VM Delta', state: 'Restarting', date: '2025-10-24' },
       { id: 5, name: 'VM Epsilon', state: 'Running', date: '2025-10-25' },
     ];
     nextId = 6;

@@ -61,7 +61,15 @@
             <button *ngIf="isStopped(vm)" class="btn btn-outline-success btn-sm" (click)="turnon(vm)">Turn on</button>
             <button *ngIf="isRunning(vm)" class="btn btn-outline-secondary btn-sm" (click)="shutdown(vm)">Shut Down</button>
             <button *ngIf="isRunning(vm)" class="btn btn-outline-info btn-sm" (click)="restart(vm)">Restart</button>
+            <button class="btn btn-outline-primary btn-sm" (click)="openScheduleModal(vm)">Schedule</button>
           </div>
+          <!-- Scheduled tasks -->
+          <div *ngIf="scheduledTasks[vm.id]?.length" class="mt-2">
+            <small *ngFor="let task of scheduledTasks[vm.id]" class="d-block text-muted">
+              Scheduled: {{ task.operation }} at {{ task.dateTime | date:'short' }}
+            </small>
+          </div>
+
         </div>
 
         <button class="btn btn-outline-danger position-absolute top-0 end-0 m-2 btn-sm"
@@ -72,3 +80,48 @@
     </div>
   </div>
 </div>
+
+<!-- Schedule Operation Modal -->
+<div class="modal fade" id="scheduleModal" tabindex="-1" aria-labelledby="scheduleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="scheduleModalLabel">Schedule Operation for {{ selectedVm?.name }}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body">
+        <form>
+          <div class="mb-3">
+            <label class="form-label">Operation</label>
+            <div>
+              <div class="form-check" *ngFor="let op of operations">
+                <input class="form-check-input"
+                       type="radio"
+                       name="operation"
+                       [value]="op"
+                       [(ngModel)]="selectedOperation"
+                       [id]="op">
+                <label class="form-check-label" [for]="op">{{ op }}</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Date and Time</label>
+            <input type="datetime-local"
+                   class="form-control"
+                   [(ngModel)]="selectedDateTime"
+                   name="dateTime">
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" (click)="scheduleOperation()">Schedule</button>
+      </div>
+    </div>
+  </div>
+</div>
+

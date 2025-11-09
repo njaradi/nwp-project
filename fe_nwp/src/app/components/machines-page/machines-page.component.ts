@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import {VmCard} from "../../model";
+import {Machine} from "../../model";
+import {MachineService} from "../../services/machine.service";
 
 
 @Component({
@@ -9,14 +10,14 @@ import {VmCard} from "../../model";
 })
 export class MachinesPageComponent {
   //TODO: make this list make sense, maybe put it in local storage
-  vmList: VmCard[] = [
-      { id: 1, name: 'VM Alpha', state: 'Running', date: '2025-10-20' },
-      { id: 2, name: 'VM Beta', state: 'Stopped', date: '2025-10-22' },
-      { id: 3, name: 'VM Gamma', state: 'Crashed', date: '2025-10-23' },
-      { id: 4, name: 'VM Delta', state: 'Restarting', date: '2025-10-24' },
-      { id: 5, name: 'VM Epsilon', state: 'Running', date: '2025-10-25' },
-    ];
-    nextId = 6;
+  vmList: Machine[] = [];
+
+  constructor(private machineService: MachineService) {}
+  ngOnInit(): void {
+    this.machineService.machines.subscribe((machines) => {
+      this.vmList = machines.filter(vm => vm.active);
+    })
+  }
 
      // Filters
     filterName = '';
@@ -30,7 +31,7 @@ export class MachinesPageComponent {
 
     states = ['Running', 'Stopped', 'Crashed', 'Restarting', 'Turning off', 'Turning on'];
 
-      get filteredVmList(): VmCard[] {
+      get filteredVmList(): Machine[] {
         return this.vmList.filter(vm => {
               const matchesName =
                 !this.filterName || vm.name.toLowerCase().includes(this.filterName.toLowerCase());
@@ -42,40 +43,35 @@ export class MachinesPageComponent {
       }
 
     addVm() {
-      if (!this.newVmName.trim()) return;
-          this.vmList.push({
-            id: this.nextId++,
-            name: this.newVmName.trim(),
-            state: 'Stopped',
-            date: new Date().toISOString().slice(0, 10)
-          });
-          this.newVmName = '';
-          this.showAddForm = false;
-    }
-
-    cancelAdd() {
-      this.newVmName = '';
-      this.showAddForm = false;
+      this.machineService.createMachine(this.newVmName);
     }
 
     deleteVm(id: number) {
-      this.vmList = this.vmList.filter(vm => vm.id !== id);
+      this.machineService.deleteMachine(id);
     }
 
-    shutdown(vm: VmCard) {
+    shutdown(vm: Machine) {
       //maybe have timeout, inform user that it is in the process of turning off
-      vm.state = 'Turning off'
-      setTimeout(() => vm.state = 'Stopped', 2000)
+      vm.state = 'Turning off';
+      this.machineService.updateMachineState(vm,"Stopped");
     }
 
-    turnon(vm: VmCard){
+    turnon(vm: Machine){
       vm.state = 'Turning on'
-      setTimeout(() => vm.state = 'Running', 2000)
+      this.machineService.updateMachineState(vm,"Running");
     }
 
     //this should be turn on
-    restart(vm: VmCard) {
+    restart(vm: Machine) {
       vm.state = 'Restarting';
-      setTimeout(() => vm.state = 'Running', 2000);
+      this.machineService.updateMachineState(vm,"Running");
     }
+
+  isRunning(vm:Machine) {
+    return vm.state === 'Running' || vm.state === 'Crashed';
+  }
+
+  isStopped(vm:Machine) {
+    return vm.state === 'Stopped';
+  }
 }

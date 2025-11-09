@@ -58,8 +58,9 @@
           <p class="card-text"><strong>Date:</strong> {{ vm.date }}</p>
 
           <div class="d-flex flex-wrap gap-2">
-            <button class="btn btn-outline-secondary btn-sm" (click)="shutdown(vm)">Shut Down</button>
-            <button class="btn btn-outline-info btn-sm" (click)="restart(vm)">Restart</button>
+            <button *ngIf="isStopped(vm)" class="btn btn-outline-success btn-sm" (click)="turnon(vm)">Turn on</button>
+            <button *ngIf="isRunning(vm)" class="btn btn-outline-secondary btn-sm" (click)="shutdown(vm)">Shut Down</button>
+            <button *ngIf="isRunning(vm)" class="btn btn-outline-info btn-sm" (click)="restart(vm)">Restart</button>
           </div>
         </div>
 

@@ -1,8 +1,10 @@
-export interface VmCard {
+export interface Machine {
   id: number;
   name: string;
   state: string;
   date: string;
+  author: string;
+  active: boolean;
   // todo: Masina kao entitet sadrzi sledece atribute:
   //  ID, stanje (slobodna/zauzeta), napravioJe (id korisnika), aktivna (true/false)
 }

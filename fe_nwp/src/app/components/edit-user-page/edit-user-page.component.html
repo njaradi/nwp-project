@@ -1,4 +1,2 @@
-<p>edit-user-page works!</p>
-
-<app-user-form (formSubmit)="saveEditedUser($event)"></app-user-form>
+<app-user-form [user]="user" (formSubmit)="updateUser($event)"></app-user-form>
 

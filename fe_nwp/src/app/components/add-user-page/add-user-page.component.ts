@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import {User} from "../../model";
+import {UserService} from "../../services/user.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-add-user-page',
@@ -7,8 +9,10 @@ import {User} from "../../model";
   styleUrls: ['./add-user-page.component.css']
 })
 export class AddUserPageComponent {
+  constructor(private userService: UserService, private router: Router) {
+  }
   createUser(user: User) {
-    console.log('New user created:', user);
-    // later you’ll send it to the server or add it to your list
+    this.userService.createUser(user);
+    this.router.navigate(['/users']);
   }
 }

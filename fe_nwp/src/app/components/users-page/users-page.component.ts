@@ -1,6 +1,5 @@
 import {Component, OnInit} from '@angular/core';
 import {User} from "../../model";
-import {Observable} from "rxjs";
 import {UserService} from "../../services/user.service";
 
 @Component({
@@ -26,6 +25,6 @@ export class UsersPageComponent implements OnInit{
 
 
   deleteUser(id: number) {
-    this.users = this.users.filter(u => u.id !== id);
+    this.userService.deleteUser(id);
   }
 }

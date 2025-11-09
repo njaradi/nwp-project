@@ -1,18 +1,55 @@
-<form [formGroup]="userForm" (ngSubmit)="onSubmit()">
-  <div>
-    <label>Name:</label>
-    <input formControlName="name" type="text" />
+<form [formGroup]="userForm" (ngSubmit)="onSubmit()" class="p-4 border rounded shadow-sm" style="max-width: 500px; margin: auto;">
+  <h3 class="mb-4">{{ user ? 'Edit User' : 'Create User' }}</h3>
+
+  <!-- Name Field -->
+  <div class="mb-3">
+    <label class="form-label">Name</label>
+    <input
+      type="text"
+      class="form-control"
+      formControlName="name"
+      [ngClass]="{'is-invalid': userForm.get('name')?.invalid && userForm.get('name')?.touched}"
+      placeholder="Enter name"
+      required
+    />
+    <div class="invalid-feedback">
+      Name is required.
+    </div>
   </div>
 
-  <div>
-    <label>Email:</label>
-    <input formControlName="email" type="email" />
+  <!-- Email Field -->
+  <div class="mb-3">
+    <label class="form-label">Email</label>
+    <input
+      type="email"
+      class="form-control"
+      formControlName="email"
+      [ngClass]="{'is-invalid': userForm.get('email')?.invalid && userForm.get('email')?.touched}"
+      placeholder="Enter email"
+      required
+    />
+    <div class="invalid-feedback">
+      Please enter a valid email.
+    </div>
   </div>
 
-  <div>
-    <label>Role:</label>
-    <input formControlName="role" type="text" />
+  <!-- Role Field -->
+  <div class="mb-3">
+    <label class="form-label">Role</label>
+    <input
+      type="text"
+      class="form-control"
+      formControlName="role"
+      [ngClass]="{'is-invalid': userForm.get('role')?.invalid && userForm.get('role')?.touched}"
+      placeholder="Enter role"
+      required
+    />
+    <div class="invalid-feedback">
+      Role is required.
+    </div>
   </div>
 
-  <button type="submit">{{ user ? 'Update User' : 'Create User' }}</button>
+  <button type="submit" class="btn btn-primary w-100" [disabled]="userForm.invalid">
+    {{ user ? 'Update User' : 'Create User' }}
+  </button>
 </form>

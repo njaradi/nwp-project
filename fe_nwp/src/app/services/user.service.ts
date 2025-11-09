@@ -13,10 +13,37 @@ export class UserService{
   users: Observable<User[]> = this.usersSubject.asObservable();
 
   constructor() {
-    // Optional: preload with some fake users for testing
     this.usersSubject.next([
       { id: 1, name: 'Alice', email: 'alice@example.com', role: 'Admin' },
       { id: 2, name: 'Bob', email: 'bob@example.com', role: 'User' }
     ]);
+  }
+
+  getUserById(id: number): User | undefined {
+    const currentUsers = this.usersSubject.value;
+    return currentUsers.find(user => user.id === id);
+  }
+
+  updateUser(updatedUser: User){
+    const currentUsers = this.usersSubject.value;
+
+    const updatedList = currentUsers.map(user =>
+      user.id === updatedUser.id ? updatedUser : user
+    );
+
+    this.usersSubject.next(updatedList);
+  }
+  createUser(newUser: User){
+    const currentUsers = this.usersSubject.value;
+    const userWithId = { ...newUser, id: currentUsers.length + 1 };
+
+    const updatedList = [...currentUsers, userWithId];
+    this.usersSubject.next(updatedList);
+  }
+  deleteUser(id: number){
+    const currentUsers = this.usersSubject.value;
+    const updatedList = currentUsers.filter(user => user.id !== id);
+
+    this.usersSubject.next(updatedList);
   }
 }

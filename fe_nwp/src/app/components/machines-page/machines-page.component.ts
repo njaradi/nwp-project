@@ -93,16 +93,16 @@ export class MachinesPageComponent {
 
     states = ['Running', 'Stopped', 'Crashed', 'Restarting', 'Turning off', 'Turning on'];
 
-      get filteredVmList(): Machine[] {
-        return this.vmList.filter(vm => {
-              const matchesName =
-                !this.filterName || vm.name.toLowerCase().includes(this.filterName.toLowerCase());
-              const matchesState = !this.filterState || vm.state === this.filterState;
-              const matchesDateFrom = !this.filterDateFrom || vm.date >= this.filterDateFrom;
-              const matchesDateTo = !this.filterDateTo || vm.date <= this.filterDateTo;
-              return matchesName && matchesState && matchesDateFrom && matchesDateTo;
-            });
-      }
+    get filteredVmList(): Machine[] {
+      return this.vmList.filter(vm => {
+            const matchesName =
+              !this.filterName || vm.name.toLowerCase().includes(this.filterName.toLowerCase());
+            const matchesState = !this.filterState || vm.state === this.filterState;
+            const matchesDateFrom = !this.filterDateFrom || vm.date >= this.filterDateFrom;
+            const matchesDateTo = !this.filterDateTo || vm.date <= this.filterDateTo;
+            return matchesName && matchesState && matchesDateFrom && matchesDateTo;
+          });
+    }
 
     addVm() {
       this.machineService.createMachine(this.newVmName);

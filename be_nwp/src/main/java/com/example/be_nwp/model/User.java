@@ -14,8 +14,8 @@ import java.util.List;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    @Column(name="USER_ID")
-    @Column
+    @Column(name="user_id")
+//    @Column
     private Long userId;
 
     @Column
@@ -30,9 +30,9 @@ public class User {
     @Column
     private Role role;
 
-//    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-//    @JsonIgnore
-//    @ToString.Exclude
-//    private List<Machine> machines;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonIgnore
+    @ToString.Exclude
+    private List<Machine> machines;
 
 }

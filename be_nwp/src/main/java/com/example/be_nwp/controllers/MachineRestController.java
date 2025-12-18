@@ -2,6 +2,7 @@ package com.example.be_nwp.controllers;
 
 import com.example.be_nwp.model.Machine;
 import com.example.be_nwp.services.MachineService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.MediaType;
@@ -49,6 +50,39 @@ public class MachineRestController {
     public ResponseEntity<?> deleteMachine(@PathVariable("id") Long id){
         machineService.deleteById(id);
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping(value="/{id}/on", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> turnOnMachine(@PathVariable("id") Long id) throws InterruptedException {
+        try {
+            machineService.turnOnMachine(id);
+            return ResponseEntity.ok("Machine running...");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Failed to turn on machine");
+        }
+    }
+
+    @PostMapping(value="/{id}/off")
+    public ResponseEntity<?> turnOffMachine(@PathVariable("id") Long id) throws InterruptedException {
+        try {
+            machineService.turnOffMachine(id);
+            return ResponseEntity.ok("Machine stopped...");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Failed to turn off machine");
+        }
+    }
+
+    @PostMapping(value="/{id}/restart")
+    public ResponseEntity<?> restartMachine(@PathVariable("id") Long id) throws InterruptedException {
+        try {
+            machineService.restartMachine(id);
+            return ResponseEntity.ok("Machine restarted...");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Failed to restart machine");
+        }
     }
 
 }

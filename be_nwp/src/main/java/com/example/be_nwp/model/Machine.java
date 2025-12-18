@@ -16,10 +16,12 @@ public class Machine {
 
     @Column
     private String name;
+    @Enumerated(EnumType.STRING)
     @Column
     private State state;
     @Column
     @CreatedDate
+    //@JsonProperty()todo?
     private LocalDateTime createdAt;
 
     @Column

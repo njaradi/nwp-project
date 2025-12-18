@@ -7,10 +7,10 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface MachineRepository extends CrudRepository<Machine, Long> {
     //pretraga po nazivu, stanju, pocetni datum, krajnji datum
-    //napravi
-    // unisti  4p
+    //napravi             OK;)
+    // unisti  4p         VRV;)
 
-    // upali
+    // upali    --> ScheduledOperation (u modelu..)
     //ugasi
     //restart  4p
 

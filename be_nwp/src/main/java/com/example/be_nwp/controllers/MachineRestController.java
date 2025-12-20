@@ -81,7 +81,7 @@ public class MachineRestController {
             return ResponseEntity.ok("Machine restarted...");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Failed to restart machine");
+                    .body("Failed to restart machine");  // todo: ovde (i kasnije na zakazanim operacijama) ide Error Log
         }
     }
 

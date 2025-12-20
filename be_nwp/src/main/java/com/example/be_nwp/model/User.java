@@ -36,4 +36,9 @@ public class User {
     @ToString.Exclude
     private List<Machine> machines;
 
+    @OneToMany(mappedBy = "createdBy", cascade = CascadeType.ALL)
+    @JsonIgnore
+    @ToString.Exclude
+    private List<ScheduledOperation> scheduledOperations;
+
 }

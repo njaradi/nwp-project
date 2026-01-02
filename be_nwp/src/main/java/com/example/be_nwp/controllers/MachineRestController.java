@@ -4,7 +4,6 @@ import com.example.be_nwp.annotations.Authorized;
 import com.example.be_nwp.annotations.OwnsMachine;
 import com.example.be_nwp.model.Machine;
 import com.example.be_nwp.services.MachineService;
-import com.example.be_nwp.utils.JwtUtil;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -66,7 +65,7 @@ public class MachineRestController {
     @Authorized(roles = {"ADMIN","MODERATOR","USER"})
     @OwnsMachine
     @PostMapping(value="/{id}/on", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> turnOnMachine(@PathVariable("id") Long id) throws InterruptedException {
+    public ResponseEntity<?> turnOnMachine(@PathVariable("id") Long id){
         try {
             machineService.turnOnMachine(id);
             return ResponseEntity.ok("Machine running...");
@@ -79,7 +78,7 @@ public class MachineRestController {
     @Authorized(roles = {"ADMIN","MODERATOR","USER"})
     @OwnsMachine
     @PostMapping(value="/{id}/off")
-    public ResponseEntity<?> turnOffMachine(@PathVariable("id") Long id) throws InterruptedException {
+    public ResponseEntity<?> turnOffMachine(@PathVariable("id") Long id) {
         try {
             machineService.turnOffMachine(id);
             return ResponseEntity.ok("Machine stopped...");
@@ -92,7 +91,7 @@ public class MachineRestController {
     @Authorized(roles = {"ADMIN","MODERATOR","USER"})
     @OwnsMachine
     @PostMapping(value="/{id}/restart")
-    public ResponseEntity<?> restartMachine(@PathVariable("id") Long id) throws InterruptedException {
+    public ResponseEntity<?> restartMachine(@PathVariable("id") Long id){
         try {
             machineService.restartMachine(id);
             return ResponseEntity.ok("Machine restarted...");

@@ -3,7 +3,6 @@ package com.example.be_nwp.controllers;
 import com.example.be_nwp.annotations.Authorized;
 import com.example.be_nwp.model.User;
 import com.example.be_nwp.services.UserService;
-import jakarta.websocket.server.PathParam;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,7 +23,7 @@ public class UserRestController {
     @Authorized(roles = {"ADMIN","MODERATOR"})
     @GetMapping(value = "/all",
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<User> getAllUsers() {return userService.findAll();};
+    public List<User> getAllUsers() {return userService.findAll();}
 
     @Authorized(roles = {"ADMIN","MODERATOR"})
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)

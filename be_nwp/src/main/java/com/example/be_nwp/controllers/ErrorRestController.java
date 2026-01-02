@@ -22,8 +22,8 @@ public class ErrorRestController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public List<ErrorMessage> getAllErrors() {return errorService.findAll();}
 
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> getErrorById(@RequestParam("errorId") Long id) {
+    @GetMapping(value ="/{id}" ,produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getErrorById(@PathVariable("id") Long id) {
         Optional<ErrorMessage> optionalError = errorService.findById(id);
         if(optionalError.isPresent()) {
             return ResponseEntity.ok(optionalError.get());

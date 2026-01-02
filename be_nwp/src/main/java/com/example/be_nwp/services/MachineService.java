@@ -5,6 +5,7 @@ import com.example.be_nwp.model.State;
 import com.example.be_nwp.repositories.MachineRepository;
 import org.springframework.stereotype.Service;
 
+import java.nio.file.AccessDeniedException;
 import java.util.List;
 import java.util.Optional;
 
@@ -69,4 +70,13 @@ public class MachineService implements IService<Machine, Long>{
         m.setState(State.RUNNING);
         machineRepository.save(m);
     }
+
+
+    public boolean isOwner(Long machineId, Long userId) {
+        return machineRepository
+                .findById(machineId)
+                .map(m -> m.getUser().getUserId().equals(userId))
+                .orElse(false);
+    }
+
 }

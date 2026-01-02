@@ -3,6 +3,7 @@ package com.example.be_nwp.controllers;
 import com.example.be_nwp.annotations.Authorized;
 import com.example.be_nwp.model.User;
 import com.example.be_nwp.services.UserService;
+import jakarta.websocket.server.PathParam;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,8 +27,8 @@ public class UserRestController {
     public List<User> getAllUsers() {return userService.findAll();};
 
     @Authorized(roles = {"ADMIN","MODERATOR"})
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> getUserById(@RequestParam("userId") Long id) {
+    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getUserById(@PathVariable("id") Long id) {
         Optional<User> optionalUser = userService.findById(id);
         if(optionalUser.isPresent()) {
             return ResponseEntity.ok(optionalUser.get());

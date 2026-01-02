@@ -1,8 +1,10 @@
 package com.example.be_nwp.controllers;
 
 import com.example.be_nwp.annotations.Authorized;
+import com.example.be_nwp.annotations.OwnsMachine;
 import com.example.be_nwp.model.Machine;
 import com.example.be_nwp.services.MachineService;
+import com.example.be_nwp.utils.JwtUtil;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,11 +26,12 @@ public class MachineRestController {
     @Authorized(roles = {"ADMIN"})
     @GetMapping(value = "/all",
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<Machine> getAllMachines() {return machineService.findAll();};
+    public List<Machine> getAllMachines() {return machineService.findAll();}
 
-    @Authorized(roles = {"ADMIN","MODERATOR","USER"}) //todo:mozda jos jedna metoda
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> getMachineById(@RequestParam("machineId") Long id) {
+    @Authorized(roles = {"ADMIN","MODERATOR","USER"})
+    @OwnsMachine//todo:mozda jos jedna metoda
+    @GetMapping(value ="/{id}",produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getMachineById(@PathVariable("id") Long id) {
         Optional<Machine> optionalMachine = machineService.findById(id);
         if(optionalMachine.isPresent()) {
             return ResponseEntity.ok(optionalMachine.get());
@@ -36,6 +39,7 @@ public class MachineRestController {
             return ResponseEntity.notFound().build();
         }
     }
+
     @Authorized(roles = {"ADMIN","MODERATOR","USER"})
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
@@ -44,6 +48,7 @@ public class MachineRestController {
     }
 
     @Authorized(roles = {"ADMIN","MODERATOR","USER"})
+    @OwnsMachine
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public Machine updateMachine(@RequestBody Machine machine) {
@@ -51,6 +56,7 @@ public class MachineRestController {
     }
 
     @Authorized(roles = {"ADMIN","MODERATOR","USER"})
+    @OwnsMachine
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<?> deleteMachine(@PathVariable("id") Long id){
         machineService.deleteById(id);
@@ -58,6 +64,7 @@ public class MachineRestController {
     }
 
     @Authorized(roles = {"ADMIN","MODERATOR","USER"})
+    @OwnsMachine
     @PostMapping(value="/{id}/on", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> turnOnMachine(@PathVariable("id") Long id) throws InterruptedException {
         try {
@@ -70,6 +77,7 @@ public class MachineRestController {
     }
 
     @Authorized(roles = {"ADMIN","MODERATOR","USER"})
+    @OwnsMachine
     @PostMapping(value="/{id}/off")
     public ResponseEntity<?> turnOffMachine(@PathVariable("id") Long id) throws InterruptedException {
         try {
@@ -82,6 +90,7 @@ public class MachineRestController {
     }
 
     @Authorized(roles = {"ADMIN","MODERATOR","USER"})
+    @OwnsMachine
     @PostMapping(value="/{id}/restart")
     public ResponseEntity<?> restartMachine(@PathVariable("id") Long id) throws InterruptedException {
         try {

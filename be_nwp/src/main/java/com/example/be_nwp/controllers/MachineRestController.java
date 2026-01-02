@@ -1,5 +1,6 @@
 package com.example.be_nwp.controllers;
 
+import com.example.be_nwp.annotations.Authorized;
 import com.example.be_nwp.model.Machine;
 import com.example.be_nwp.services.MachineService;
 import org.springframework.http.HttpStatus;
@@ -20,10 +21,12 @@ public class MachineRestController {
         this.machineService = machineService;
     }
 
+    @Authorized(roles = {"ADMIN"})
     @GetMapping(value = "/all",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Machine> getAllMachines() {return machineService.findAll();};
 
+    @Authorized(roles = {"ADMIN","MODERATOR","USER"}) //todo:mozda jos jedna metoda
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getMachineById(@RequestParam("machineId") Long id) {
         Optional<Machine> optionalMachine = machineService.findById(id);
@@ -33,25 +36,28 @@ public class MachineRestController {
             return ResponseEntity.notFound().build();
         }
     }
-
+    @Authorized(roles = {"ADMIN","MODERATOR","USER"})
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public Machine createMachine(@RequestBody Machine machine) {
         return machineService.save(machine);
     }
 
+    @Authorized(roles = {"ADMIN","MODERATOR","USER"})
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public Machine updateMachine(@RequestBody Machine machine) {
         return machineService.save(machine);
     }
 
+    @Authorized(roles = {"ADMIN","MODERATOR","USER"})
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<?> deleteMachine(@PathVariable("id") Long id){
         machineService.deleteById(id);
         return ResponseEntity.ok().build();
     }
 
+    @Authorized(roles = {"ADMIN","MODERATOR","USER"})
     @PostMapping(value="/{id}/on", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> turnOnMachine(@PathVariable("id") Long id) throws InterruptedException {
         try {
@@ -63,6 +69,7 @@ public class MachineRestController {
         }
     }
 
+    @Authorized(roles = {"ADMIN","MODERATOR","USER"})
     @PostMapping(value="/{id}/off")
     public ResponseEntity<?> turnOffMachine(@PathVariable("id") Long id) throws InterruptedException {
         try {
@@ -74,6 +81,7 @@ public class MachineRestController {
         }
     }
 
+    @Authorized(roles = {"ADMIN","MODERATOR","USER"})
     @PostMapping(value="/{id}/restart")
     public ResponseEntity<?> restartMachine(@PathVariable("id") Long id) throws InterruptedException {
         try {

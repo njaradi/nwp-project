@@ -22,11 +22,15 @@ public class AuthService {
 
         User user = userRepository
                 .findByUsername(request.username());
+
         if(user == null) {
             throw new RuntimeException("User not found");
         }
         if (!user.getPassword().equals(request.passwordHash())) {
             throw new RuntimeException("Invalid credentials");
+        }
+        if(!user.getActive()){
+            throw new RuntimeException("User is not active");
         }
 
         String token = jwtUtil.generateToken(user);

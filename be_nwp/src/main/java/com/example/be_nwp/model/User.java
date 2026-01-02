@@ -41,4 +41,7 @@ public class User {
     @ToString.Exclude
     private List<ScheduledOperation> scheduledOperations;
 
+    @Column
+    private Boolean active;
+
 }

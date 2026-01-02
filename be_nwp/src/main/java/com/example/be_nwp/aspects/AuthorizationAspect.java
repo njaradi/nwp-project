@@ -7,6 +7,9 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.stereotype.Component;
+import com.example.be_nwp.annotations.Authorized;
+
+import java.util.Arrays;
 
 @Aspect
 @Component
@@ -20,8 +23,8 @@ public class AuthorizationAspect {
         this.request = request;
     }
 
-    @Around("@annotation(Authorized)")
-    public Object authorize(ProceedingJoinPoint joinPoint) throws Throwable {
+    @Around("@annotation(authorized)")
+    public Object authorize(ProceedingJoinPoint joinPoint, Authorized authorized) throws Throwable {
 
         String header = request.getHeader("Authorization");
 
@@ -34,12 +37,20 @@ public class AuthorizationAspect {
         Claims claims;
         try {
             claims = jwtUtil.parseToken(token);
+            String userRole = claims.get("role", String.class);
+
+            String[] allowedRoles = authorized.roles();
+
+            boolean allowed = Arrays.stream(allowedRoles)
+                    .anyMatch(r -> r.equals(userRole));
+
+            if (!allowed) {
+                throw new RuntimeException("Forbidden");
+            }
+
         } catch (Exception e) {
             throw new RuntimeException("Invalid token");
         }
-
-        // (opciono) setovanje user-a u ThreadLocal
-        //UserContext.setUsername(claims.getSubject());
 
         return joinPoint.proceed();
     }

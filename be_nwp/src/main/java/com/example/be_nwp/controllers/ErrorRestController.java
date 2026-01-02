@@ -20,7 +20,7 @@ public class ErrorRestController {
     }
     @GetMapping(value = "/all",
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<ErrorMessage> getAllErrors() {return errorService.findAll();};
+    public List<ErrorMessage> getAllErrors() {return errorService.findAll();}
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getErrorById(@RequestParam("errorId") Long id) {

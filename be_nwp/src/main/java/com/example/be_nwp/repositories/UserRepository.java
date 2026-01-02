@@ -6,5 +6,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface UserRepository extends CrudRepository<User, Long> {
-    //todo: ovde vrv ne moze krud samo, posto imamo permisije
+
+    public User findByUsername(String username);
 }
+//todo: ovde vrv ne moze krud samo, posto imamo permisije

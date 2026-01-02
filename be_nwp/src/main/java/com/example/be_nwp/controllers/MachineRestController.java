@@ -4,6 +4,7 @@ import com.example.be_nwp.annotations.Authorized;
 import com.example.be_nwp.annotations.OwnsMachine;
 import com.example.be_nwp.model.Machine;
 import com.example.be_nwp.services.MachineService;
+import com.example.be_nwp.utils.CurrentUserProvider;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,15 +18,25 @@ import java.util.Optional;
 @RequestMapping("/api/machines")
 public class MachineRestController {
     private final MachineService machineService;
+    private final CurrentUserProvider currentUserProvider;
 
-    public MachineRestController(MachineService machineService) {
+    public MachineRestController(MachineService machineService, CurrentUserProvider currentUserProvider) {
         this.machineService = machineService;
+        this.currentUserProvider = currentUserProvider;
     }
 
     @Authorized(roles = {"ADMIN"})
     @GetMapping(value = "/all",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Machine> getAllMachines() {return machineService.findAll();}
+
+    @Authorized(roles = {"ADMIN","MODERATOR","USER"})
+    @GetMapping(value = "/my",
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<Machine> getMyMachines() {
+        Long currentUserId = currentUserProvider.getUserId();
+        return machineService.findByUserId(currentUserId);
+    }
 
     @Authorized(roles = {"ADMIN","MODERATOR","USER"})
     @OwnsMachine//todo:mozda jos jedna metoda

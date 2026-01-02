@@ -16,6 +16,7 @@ public class MachineService implements IService<Machine, Long>{
         this.machineRepository = machineRepository;
     }
 
+
     @Override
     public Machine save(Machine machine) {
         return machineRepository.save(machine);
@@ -29,6 +30,10 @@ public class MachineService implements IService<Machine, Long>{
     @Override
     public List<Machine> findAll() {
         return (List<Machine>) machineRepository.findAll();
+    }
+
+    public List<Machine> findByUserId(Long id) {
+        return (List<Machine>) machineRepository.findByUserUserId(id);
     }
 
     @Override

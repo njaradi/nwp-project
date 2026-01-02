@@ -4,18 +4,10 @@ import org.springframework.data.repository.CrudRepository;
 import com.example.be_nwp.model.Machine;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface MachineRepository extends CrudRepository<Machine, Long> {
-    //pretraga po nazivu, stanju, pocetni datum, krajnji datum
-    //napravi             OK;)
-    // unisti  4p         VRV;)
-
-    // upali    --> ScheduledOperation (u modelu..)
-    //ugasi
-    //restart  4p
-
-
-
-    //zakazivanje? da li to ovde ili negde drugde zakazemo pa odatle
-    //samo pozovem neku od ovih operacija?  8p
+    //@Query("SELECT m FROM Machine m WHERE m.user = :userId")
+    List<Machine> findByUserUserId(Long userId);
 }

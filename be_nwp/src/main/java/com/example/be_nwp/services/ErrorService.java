@@ -15,6 +15,8 @@ public class ErrorService implements IService<ErrorMessage, Long> {
         this.errorRepository = errorRepository;
     }
 
+    public List<ErrorMessage> findMyErrors(Long userId) {return errorRepository.findByMachineUserUserId(userId);}
+
     @Override
     public ErrorMessage save(ErrorMessage errorMessage) {
         return errorRepository.save(errorMessage);

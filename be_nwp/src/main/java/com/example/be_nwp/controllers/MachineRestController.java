@@ -3,6 +3,7 @@ package com.example.be_nwp.controllers;
 import com.example.be_nwp.annotations.Authorized;
 import com.example.be_nwp.annotations.OwnsMachine;
 import com.example.be_nwp.model.Machine;
+import com.example.be_nwp.model.State;
 import com.example.be_nwp.services.MachineService;
 import com.example.be_nwp.utils.CurrentUserProvider;
 import org.springframework.http.HttpStatus;
@@ -10,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.MediaType;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,7 +42,20 @@ public class MachineRestController {
     }
 
     @Authorized(roles = {"ADMIN","MODERATOR","USER"})
-    @OwnsMachine//todo:mozda jos jedna metoda
+    @GetMapping(value = "/my/filter", produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<Machine> filterMyMachines(
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) State state,
+            @RequestParam(required = false) LocalDate from,
+            @RequestParam(required = false) LocalDate to
+    ) {
+        Long userId = currentUserProvider.getUserId();
+        return machineService.filterMachines(userId, name, state, from, to);
+    }
+
+
+    @Authorized(roles = {"ADMIN","MODERATOR","USER"})
+    @OwnsMachine
     @GetMapping(value ="/{id}",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getMachineById(@PathVariable("id") Long id) {
         Optional<Machine> optionalMachine = machineService.findById(id);

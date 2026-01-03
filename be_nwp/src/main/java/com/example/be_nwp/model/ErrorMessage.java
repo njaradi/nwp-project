@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Table(name="errors")
 public class ErrorMessage {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long errorId;
 
     @Column

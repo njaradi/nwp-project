@@ -14,7 +14,7 @@ public class JwtUtil {
     private final String SECRET = "mrSandmanBringMeADreamPamPamPamPamMakeHimTheCutestThatIveEverSeenGiveHimTwoLipsLikeRosesAndClover";
 
     public String generateToken(User user) {
-        long EXPIRATION = 1000 * 60 * 60; // 1h
+        long EXPIRATION = 1000 * 60 * 60 * 24; // 1h*24
         //todo: dodati jos claimova?
         return Jwts.builder()
                 .setSubject(user.getUsername())

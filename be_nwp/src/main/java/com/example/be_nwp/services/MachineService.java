@@ -5,6 +5,8 @@ import com.example.be_nwp.model.State;
 import com.example.be_nwp.repositories.MachineRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,7 +35,7 @@ public class MachineService implements IService<Machine, Long>{
     }
 
     public List<Machine> findByUserId(Long id) {
-        return (List<Machine>) machineRepository.findByUserUserId(id);
+        return machineRepository.findByUserUserIdAndActiveTrue(id);
     }
 
     @Override
@@ -82,5 +84,24 @@ public class MachineService implements IService<Machine, Long>{
                 .map(m -> m.getUser().getUserId().equals(userId))
                 .orElse(false);
     }
+
+    public List<Machine> filterMachines(
+            Long userId,
+            String name,
+            State state,
+            LocalDate from,
+            LocalDate to
+    ) {
+        LocalDateTime fromDateTime = from != null ? from.atStartOfDay() : null;
+        LocalDateTime toDateTime = to != null ? to.atTime(23, 59, 59) : null;
+        return machineRepository.filterMachines(
+                userId,
+                name,
+                state,
+                fromDateTime,
+                toDateTime
+        );
+    }
+
 
 }

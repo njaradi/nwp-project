@@ -1,47 +1,44 @@
 import { Injectable } from '@angular/core';
 import {BehaviorSubject, Observable} from "rxjs";
-import {User} from "../model";
+import {Machine, User} from "../model";
+import {HttpClient} from "@angular/common/http";
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService{
-  // BehaviorSubject holds the current list of users and emits new values whenever updated
-  private usersSubject = new BehaviorSubject<User[]>([]);
+  private readonly apiUrl = 'http://localhost:8080/api/users';
 
-  // Observable for components to subscribe to (read-only)
-  users: Observable<User[]> = this.usersSubject.asObservable();
-
-  constructor() {
-    this.usersSubject.next([
-    ]);
+  constructor(private http: HttpClient) {
   }
 
-  getUserById(id: number): User | undefined {
-    const currentUsers = this.usersSubject.value;
-    return currentUsers.find(user => user.userId === id);
+  // GET /api/users/all
+  getAllUsers(): Observable<User[]>  {
+    console.log("get all users in front");
+    return this.http.get<User[]>(`${this.apiUrl}/all`);
   }
 
-  updateUser(updatedUser: User){
-    const currentUsers = this.usersSubject.value;
-
-    const updatedList = currentUsers.map(user =>
-      user.userId === updatedUser.userId ? updatedUser : user
-    );
-
-    this.usersSubject.next(updatedList);
+  // GET /api/users/{id}
+  getUserById(id: number): Observable<User>  {
+    console.log("getUserById " + id);
+    return this.http.get<User>(`${this.apiUrl}/${id}`);
   }
-  createUser(newUser: User){
-    const currentUsers = this.usersSubject.value;
-    const userWithId = { ...newUser, id: currentUsers.length + 1 };
 
-    const updatedList = [...currentUsers, userWithId];
-    this.usersSubject.next(updatedList);
+  // PUT /api/users
+  updateUser(updatedUser: User): Observable<User> {
+    console.log("updateUser" + updatedUser);
+    return this.http.put<User>(this.apiUrl, updatedUser)
   }
-  deleteUser(id: number){
-    const currentUsers = this.usersSubject.value;
-    const updatedList = currentUsers.filter(user => user.userId !== id);
 
-    this.usersSubject.next(updatedList);
+  // POST /api/user
+  createUser(newUser: User):Observable<User>{
+    console.log("createUser" + newUser);
+    return this.http.post<User>(this.apiUrl, newUser);
+  }
+
+  // DELETE /api/machines/{id}
+  deleteUser(id: number): Observable<void>{
+    console.log("delete user in front");
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 }

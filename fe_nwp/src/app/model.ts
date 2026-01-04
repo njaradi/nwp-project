@@ -15,6 +15,7 @@ export interface User {
   username: string;
   email: string;
   role: string;
+  password: string;
   // todo: pri kreiranju korisnika potrebno je popuniti i koje (sve) dozvole ima
   //  novi korisnik, jesmo li to mislili sa ovim role? ili ostavljamo za kasnije?
 }

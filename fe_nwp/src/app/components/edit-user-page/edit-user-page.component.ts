@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {User} from "../../model";
 import {ActivatedRoute, Router} from "@angular/router";
 import {UserService} from "../../services/user.service";
+import {Observable} from "rxjs";
 
 @Component({
   selector: 'app-edit-user-page',
@@ -15,13 +16,16 @@ export class EditUserPageComponent implements OnInit{
   ngOnInit(): void {
     // read the user id from the route parameters
     const id = Number(this.route.snapshot.paramMap.get('id'));
+
     if (id) {
-      const foundUser = this.userService.getUserById(id);
-      if (foundUser) {
-        this.user = {...foundUser}; // clone it to avoid mutating directly
-      } else {
-        console.error('User not found');
-      }
+      this.userService.getUserById(id).subscribe({
+        next: (foundUser) => {
+          this.user = { ...foundUser };
+        },
+        error: () => {
+          console.error('User not found');
+        }
+      });
     }
   }
 
@@ -29,8 +33,16 @@ export class EditUserPageComponent implements OnInit{
   //   console.log('Edited user saved:', user);
   //   // later you’ll send it to the server or add it to your list
   // }
+
   updateUser(updatedUser: User): void {
-    this.userService.updateUser(updatedUser);
-    this.router.navigate(['/users']);
+    console.log('sending user', updatedUser);
+    this.userService.updateUser(updatedUser).subscribe({
+      next: () => {
+        this.router.navigate(['/users']);
+      },
+      error: err => {
+        console.error('Update failed', err);
+      }
+    });
   }
 }

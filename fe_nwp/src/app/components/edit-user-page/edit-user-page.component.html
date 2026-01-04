@@ -1,2 +1,2 @@
-<app-user-form [user]="user" (formSubmit)="updateUser($event)"></app-user-form>
+<app-user-form  *ngIf="user" [user]="user" (formSubmit)="updateUser(user!)"></app-user-form>
 

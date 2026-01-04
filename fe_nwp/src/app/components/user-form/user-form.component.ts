@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import {Component, Input, Output, EventEmitter, OnInit, SimpleChanges, OnChanges} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {User} from "../../model";
 
@@ -8,7 +8,7 @@ import {User} from "../../model";
   templateUrl: './user-form.component.html',
   styleUrls: ['./user-form.component.css']
 })
-export class UserFormComponent {
+export class UserFormComponent implements OnChanges{
   @Input() user: User | null = null;
   @Output() formSubmit = new EventEmitter<User>();
 
@@ -16,17 +16,18 @@ export class UserFormComponent {
 
   constructor(private fb: FormBuilder) {
     this.userForm = this.fb.group({
-      name: ['', Validators.required],
+      username: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       role: ['', Validators.required],
+      password: ['', Validators.required]
     });
   }
 
-  ngOnInit(): void {
-    if (this.user) {
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['user'] && this.user) {
       this.userForm.patchValue(this.user);
     }
-  }
+    }
 
   onSubmit() {
     if (this.userForm.valid) {

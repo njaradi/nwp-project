@@ -8,7 +8,9 @@ import com.example.be_nwp.services.MachineService;
 import com.example.be_nwp.utils.CurrentUserProvider;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.MediaType;
@@ -91,11 +93,11 @@ public class MachineRestController {
         return ResponseEntity.ok().build();
     }
 
-    @Authorized(roles = {"ADMIN","MODERATOR","USER"})
-    @OwnsMachine
-    @MessageMapping("/{id}/on") // client sends here
+    //@Authorized(roles = {"ADMIN","MODERATOR","USER"})
+    //@OwnsMachine
+    @MessageMapping("/machines/{id}/on") // client sends here
     @SendTo("/topic/machines")
-    public ResponseEntity<?> turnOnMachine(@PathVariable("id") Long id){
+    public ResponseEntity<?> turnOnMachine(@DestinationVariable Long id){
         try {
             machineService.turnOnMachine(id);
             return ResponseEntity.ok("Machine running...");
@@ -105,8 +107,8 @@ public class MachineRestController {
         }
     }
 
-    @Authorized(roles = {"ADMIN","MODERATOR","USER"})
-    @OwnsMachine
+    //@Authorized(roles = {"ADMIN","MODERATOR","USER"})
+    //@OwnsMachine
     @PostMapping(value="/{id}/off")
     public ResponseEntity<?> turnOffMachine(@PathVariable("id") Long id) {
         try {
@@ -118,8 +120,8 @@ public class MachineRestController {
         }
     }
 
-    @Authorized(roles = {"ADMIN","MODERATOR","USER"})
-    @OwnsMachine
+    //@Authorized(roles = {"ADMIN","MODERATOR","USER"})
+    //@OwnsMachine
     @PostMapping(value="/{id}/restart")
     public ResponseEntity<?> restartMachine(@PathVariable("id") Long id){
         try {

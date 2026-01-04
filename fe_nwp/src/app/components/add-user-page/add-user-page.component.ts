@@ -12,7 +12,14 @@ export class AddUserPageComponent {
   constructor(private userService: UserService, private router: Router) {
   }
   createUser(user: User) {
-    this.userService.createUser(user);
+    this.userService.createUser(user).subscribe(
+      {
+        next: () => {
+          this.router.navigate(['/users']);
+        },
+        error: err => {
+          console.error('create user failed', err);
+        }});
     this.router.navigate(['/users']);
   }
 }

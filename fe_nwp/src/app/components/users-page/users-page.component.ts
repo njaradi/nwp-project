@@ -12,19 +12,17 @@ export class UsersPageComponent implements OnInit{
 
   constructor(private userService: UserService) {}
   ngOnInit(): void {
-    // Assign the observable, Angular async pipe will handle subscription
-    this.userService.users.subscribe((users) => {
-      this.users = users;
-    })
+    this.loadUsers();
   }
-  // users: User[] = [
-  //   { id: 1, name: 'Alice Johnson', email: 'alice@example.com', role: 'Admin' },
-  //   { id: 2, name: 'Bob Smith', email: 'bob@example.com', role: 'User' },
-  //   { id: 3, name: 'Charlie Brown', email: 'charlie@example.com', role: 'Manager' }
-  // ];
+
+  loadUsers(): void {
+    this.userService.getAllUsers().subscribe(users => {
+      this.users = users;
+    });
+  }
 
 
   deleteUser(id: number) {
-    this.userService.deleteUser(id);
+    this.userService.deleteUser(id).subscribe();
   }
 }

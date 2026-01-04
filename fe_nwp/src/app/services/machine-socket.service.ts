@@ -33,7 +33,7 @@ export class MachineSocketService {
   turnOn(id: number) {
     this.client.publish({
       destination: `/app/machines/${id}/on`,
-      body: JSON.stringify({}) // you can pass more data if needed
+      body: '' // you can pass more data if needed
     });
   }
 }

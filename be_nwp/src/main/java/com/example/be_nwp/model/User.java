@@ -42,6 +42,6 @@ public class User {
     private List<ScheduledOperation> scheduledOperations;
 
     @Column
-    private Boolean active;
+    private Boolean active = true;
 
 }

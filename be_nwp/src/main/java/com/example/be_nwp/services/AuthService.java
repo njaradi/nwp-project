@@ -26,7 +26,7 @@ public class AuthService {
         if(user == null) {
             throw new RuntimeException("User not found");
         }
-        if (!user.getPassword().equals(request.passwordHash())) {
+        if (!user.getPassword().equals(request.password())) {
             throw new RuntimeException("Invalid credentials");
         }
         if(!user.getActive()){

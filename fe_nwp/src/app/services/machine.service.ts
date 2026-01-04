@@ -1,82 +1,81 @@
 import { Injectable } from '@angular/core';
-import {BehaviorSubject, Observable} from "rxjs";
+import { HttpClient, HttpParams } from '@angular/common/http';
+import {Observable} from "rxjs";
 import {Machine} from "../model";
 
 @Injectable({
   providedIn: 'root'
 })
 export class MachineService{
-  // BehaviorSubject holds the current list of machines and emits new values whenever updated
-  private machinesSubject = new BehaviorSubject<Machine[]>([]);
 
-  // Observable for components to subscribe to (read-only)
-  machines: Observable<Machine[]> = this.machinesSubject.asObservable();
+  private readonly apiUrl = 'http://localhost:8080/api/machines';
 
-  constructor() {
-    // Optional: preload with some fake machines for testing
-    this.machinesSubject.next([
-      { id: 1, name: 'VM Alpha', state: 'Running', date: '2025-10-20', author: "Admin", active: true },
-      { id: 2, name: 'VM Beta', state: 'Stopped', date: '2025-10-22', author: "Alice", active: true },
-      { id: 3, name: 'VM Gamma', state: 'Crashed', date: '2025-10-23',author: "Bob", active: true },
-      { id: 4, name: 'VM Delta', state: 'Restarting', date: '2025-10-24', author: "Admin", active: true },
-      { id: 5, name: 'VM Epsilon', state: 'Running', date: '2025-10-25', author: "Admin", active: true },
-    ]);
+  constructor(private http: HttpClient) {
   }
 
-  getMachineById(id: number): Machine | undefined {
-    const currentMachines = this.machinesSubject.value;
-    return currentMachines.find(machine => machine.id === id);
+  // GET /api/machines/my
+  getMyMachines(): Observable<Machine[]> {
+    return this.http.get<Machine[]>(`${this.apiUrl}/my`);
   }
 
-  updateMachine(updatedMachine: Machine){
-    const currentMachines = this.machinesSubject.value;
+  // GET /api/machines/my/filter
+  filterMyMachines(
+    name?: string,
+    state?: string,
+    from?: string,
+    to?: string
+  ): Observable<Machine[]> {
 
-    const updatedList = currentMachines.map(machine =>
-      machine.id === updatedMachine.id ? updatedMachine : machine
-    );
+    let params = new HttpParams();
 
-    this.machinesSubject.next(updatedList);
+    if (name)  params = params.set('name', name);
+    if (state) params = params.set('state', state);
+    if (from)  params = params.set('from', from);
+    if (to)    params = params.set('to', to);
+
+    return this.http.get<Machine[]>(`${this.apiUrl}/my/filter`, { params });
   }
 
-
-  updateMachineState(updatedMachine: Machine,state: string){
-
-    const delay = 10000 + Math.random() * 2000;
-
-    setTimeout(() => {
-
-      const currentMachines = this.machinesSubject.value;
-
-      const updatedList = currentMachines.map(machine =>
-        machine.id === updatedMachine.id
-          ? {...machine, state} // copy old machine, change state
-          : machine
-      );
-
-      this.machinesSubject.next(updatedList);
-    }, delay);
+  // GET /api/machines/{id}
+  getMachineById(id: number): Observable<Machine> {
+    return this.http.get<Machine>(`${this.apiUrl}/${id}`);
   }
 
-  createMachine(machineName: string){
-    const currentMachines = this.machinesSubject.value;
-
-    const newMachine: Machine = {
-      id: currentMachines.length+1, // or however you generate IDs
+  // POST /api/machines
+  createMachine(machineName: String): Observable<Machine> {
+    const machine = {
       name: machineName,
-      state: 'Stopped', // default state
-      date: new Date().toISOString().slice(0, 10),
-      author: "Admin",//todo: current user
+      state: 'STOPPED',
       active: true
     };
-
-    const updatedList = [...currentMachines, newMachine];
-    this.machinesSubject.next(updatedList);
+    return this.http.post<Machine>(this.apiUrl, machine);
   }
-  deleteMachine(id: number){
-    const currentMachines = this.machinesSubject.value.map(machine =>
-      machine.id === id ? { ...machine, active: false } : machine
-    );
 
-    this.machinesSubject.next(currentMachines);
+  // PUT /api/machines
+  updateMachine(machine: Machine): Observable<Machine> {
+    return this.http.put<Machine>(this.apiUrl, machine);
+  }
+
+  // DELETE /api/machines/{id}
+  deleteMachine(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
+
+  // POST /api/machines/{id}/on
+  turnOn(id: number): Observable<any> {
+    console.log("turnOn fun called")
+    return this.http.post(`${this.apiUrl}/${id}/on`, null);
+  }
+
+  // POST /api/machines/{id}/off
+  turnOff(id: number): Observable<any> {
+    console.log("turnOff fun called")
+    return this.http.post(`${this.apiUrl}/${id}/off`, null);
+  }
+
+  // POST /api/machines/{id}/restart
+  restart(id: number): Observable<any> {
+    console.log("restart fun called")
+    return this.http.post(`${this.apiUrl}/${id}/restart`, null);
   }
 }

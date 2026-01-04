@@ -41,21 +41,21 @@
 
   <!-- VM Grid -->
   <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-    <div *ngFor="let vm of filteredVmList" class="col">
+    <div *ngFor="let vm of vmList" class="col">
       <div class="card h-100 border border-2 position-relative"
            [ngClass]="{
-             'border-primary': vm.state === 'Running',
-             'border-danger': vm.state === 'Crashed',
-             'border-secondary': vm.state === 'Stopped',
-             'border-warning': vm.state === 'Restarting',
-             'border-info': vm.state === 'Turning off',
-             'border-success': vm.state ==='Turning on'
+             'border-primary': vm.state === 'RUNNING',
+             'border-danger': vm.state === 'CRASHED',
+             'border-secondary': vm.state === 'STOPPED',
+             'border-warning': vm.state === 'RESTARTING',
+             'border-info': vm.state === 'TURNING_ON',
+             'border-success': vm.state ==='TUNING_OFF'
            }">
 
         <div class="card-body">
           <h5 class="card-title">{{ vm.name }}</h5>
           <p class="card-text mb-1"><strong>State:</strong> {{ vm.state }}</p>
-          <p class="card-text"><strong>Date:</strong> {{ vm.date }}</p>
+          <p class="card-text"><strong>Date:</strong> {{ vm.createdAt }}</p>
 
           <div class="d-flex flex-wrap gap-2">
             <button *ngIf="isStopped(vm)" class="btn btn-outline-success btn-sm" (click)="turnon(vm)">Turn on</button>
@@ -64,8 +64,8 @@
             <button class="btn btn-outline-primary btn-sm" (click)="openScheduleModal(vm)">Schedule</button>
           </div>
           <!-- Scheduled tasks -->
-          <div *ngIf="scheduledTasks[vm.id]?.length" class="mt-2">
-            <small *ngFor="let task of scheduledTasks[vm.id]" class="d-block text-muted">
+          <div *ngIf="scheduledTasks[vm.machineId]?.length" class="mt-2">
+            <small *ngFor="let task of scheduledTasks[vm.machineId]" class="d-block text-muted">
               Scheduled: {{ task.operation }} at {{ task.dateTime | date:'short' }}
             </small>
           </div>
@@ -73,7 +73,7 @@
         </div>
 
         <button class="btn btn-outline-danger position-absolute top-0 end-0 m-2 btn-sm"
-                (click)="deleteVm(vm.id)">Delete
+                (click)="deleteVm(vm.machineId)">Delete
           <i class="bi bi-trash"></i>
         </button>
       </div>

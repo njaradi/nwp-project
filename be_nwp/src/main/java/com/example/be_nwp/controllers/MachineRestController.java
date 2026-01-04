@@ -8,6 +8,8 @@ import com.example.be_nwp.services.MachineService;
 import com.example.be_nwp.utils.CurrentUserProvider;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.MediaType;
 
@@ -91,7 +93,8 @@ public class MachineRestController {
 
     @Authorized(roles = {"ADMIN","MODERATOR","USER"})
     @OwnsMachine
-    @PostMapping(value="/{id}/on", produces = MediaType.APPLICATION_JSON_VALUE)
+    @MessageMapping("/{id}/on") // client sends here
+    @SendTo("/topic/machines")
     public ResponseEntity<?> turnOnMachine(@PathVariable("id") Long id){
         try {
             machineService.turnOnMachine(id);

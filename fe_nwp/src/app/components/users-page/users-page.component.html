@@ -1,10 +1,3 @@
-<!-- TODO: Permisije!! citanje, pravljenje, azuriranje i brisanje -->
-
-<!-- jedno dugme za novog korisnika -->
-<!-- tabela svih kosrinka -->
-<!-- editovanje korisnika na klik korisnika u tabeli -->
-<!-- dugme za brisanje korisnika u tabeli -->
-
 <button [routerLink]="'/users/new'" type="button" class="btn btn-primary">Add User</button>
 
 <div class="container mt-4">
@@ -22,13 +15,13 @@
     </thead>
     <tbody>
     <tr *ngFor="let user of users">
-      <td>{{ user.id }}</td>
-      <td>{{ user.name }}</td>
+      <td>{{ user.userId }}</td>
+      <td>{{ user.username }}</td>
       <td>{{ user.email }}</td>
       <td>{{ user.role }}</td>
       <td>
         <a
-          [routerLink]="'/users/edit/'+user.id"
+          [routerLink]="'/users/edit/'+user.userId"
           class="btn btn-sm btn-primary"
         >
           Edit
@@ -37,7 +30,7 @@
       <td>
         <a
           class="btn btn-sm btn-danger"
-          (click)="deleteUser(user.id)"
+          (click)="deleteUser(user.userId)"
         >
           Delete
         </a>
@@ -46,34 +39,3 @@
     </tbody>
   </table>
 </div>
-
-
-<!--<table class="table table-hover">-->
-<!--  <thead>-->
-<!--  <tr>-->
-<!--    <th scope="col">#</th>-->
-<!--    <th scope="col">First</th>-->
-<!--    <th scope="col">Last</th>-->
-<!--    <th scope="col">Handle</th>-->
-<!--  </tr>-->
-<!--  </thead>-->
-<!--  <tbody>-->
-<!--  <tr>-->
-<!--    <th scope="row">1</th>-->
-<!--    <td>Mark</td>-->
-<!--    <td>Otto</td>-->
-<!--    <td>@mdo</td>-->
-<!--  </tr>-->
-<!--  <tr>-->
-<!--    <th scope="row">2</th>-->
-<!--    <td>Jacob</td>-->
-<!--    <td>Thornton</td>-->
-<!--    <td>@fat</td>-->
-<!--  </tr>-->
-<!--  <tr>-->
-<!--    <th scope="row">3</th>-->
-<!--    <td colspan="2">Larry the Bird</td>-->
-<!--    <td>@twitter</td>-->
-<!--  </tr>-->
-<!--  </tbody>-->
-<!--</table>-->

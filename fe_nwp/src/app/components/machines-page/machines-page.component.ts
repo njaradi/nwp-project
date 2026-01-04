@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import {Machine} from "../../model";
 import {MachineService} from "../../services/machine.service";
 import { Modal } from 'bootstrap';
+import {MachineSocketService} from "../../services/machine-socket.service";
 //todo: schedule stuff
 
 @Component({
@@ -17,20 +18,48 @@ export class MachinesPageComponent {
   selectedVm: Machine | null = null;
   selectedOperation: string = '';
   selectedDateTime: string = '';
-  operations = ['Turn on', 'Shut down', 'Restart'];
+  operations = ['ON', 'OFF', 'RESTART'];
   scheduleModal: any;
 
-  constructor(private machineService: MachineService) {}
+  constructor(private machineService: MachineService, private machineSocketService: MachineSocketService) {}
   ngOnInit(): void {
-    this.machineService.machines.subscribe((machines) => {
-      this.vmList = machines.filter(vm => vm.active);
+
+    this.machineSocketService.onMachineUpdates().subscribe(machine => {
+      console.log('Machine updated:', machine);
+      // update your vmList here if needed
     });
+
+    this.loadMachines();
 
     setTimeout(() => {
       const modalEl = document.getElementById('scheduleModal');
       if (modalEl) {
         this.scheduleModal = new Modal(modalEl);
       }
+    });
+  }
+
+  // Filters
+  filterName = '';
+  filterState = '';
+  filterDateFrom = '';
+  filterDateTo = '';
+
+  // Add new VM popup
+  showAddForm = false;
+  newVmName = '';
+
+  states = ['RUNNING', 'STOPPED', 'CRASHED', 'RESTARTING', 'TURNING_OFF', 'TURNNNING_ON'];
+
+
+  loadMachines(): void {
+    this.machineService.filterMyMachines(
+      this.filterName,
+      this.filterState,
+      this.filterDateFrom,
+      this.filterDateTo
+    ).subscribe(machines => {
+      this.vmList = machines;
     });
   }
 
@@ -45,8 +74,8 @@ export class MachinesPageComponent {
     if (!this.selectedVm || !this.selectedOperation || !this.selectedDateTime) return;
 
     //initialize array if none exists
-    if (!this.scheduledTasks[this.selectedVm.id]) {
-      this.scheduledTasks[this.selectedVm.id] = [];
+    if (!this.scheduledTasks[this.selectedVm.machineId]) {
+      this.scheduledTasks[this.selectedVm.machineId] = [];
     }
 
     //add new task
@@ -54,7 +83,7 @@ export class MachinesPageComponent {
       operation: this.selectedOperation,
       dateTime: this.selectedDateTime
     };
-    this.scheduledTasks[this.selectedVm.id].push(task);
+    this.scheduledTasks[this.selectedVm.machineId].push(task);
 
     console.log(`Scheduled ${this.selectedOperation} for ${this.selectedVm.name} at ${this.selectedDateTime}`);
 
@@ -62,18 +91,18 @@ export class MachinesPageComponent {
     const delay = new Date(this.selectedDateTime).getTime() - Date.now();
     if (delay > 0) {
       setTimeout(() => {
-        if (this.selectedOperation === 'Turn on') this.turnon(this.selectedVm!);
-        else if (this.selectedOperation === 'Shut down') this.shutdown(this.selectedVm!);
-        else if (this.selectedOperation === 'Restart') this.restart(this.selectedVm!);
+        if (this.selectedOperation === 'ON') this.turnon(this.selectedVm!);
+        else if (this.selectedOperation === 'OFF') this.shutdown(this.selectedVm!);
+        else if (this.selectedOperation === 'RESTART') this.restart(this.selectedVm!);
 
         // Remove the task from the scheduledTasks so label disappears
-        this.scheduledTasks[this.selectedVm!.id] = this.scheduledTasks[this.selectedVm!.id].filter(
+        this.scheduledTasks[this.selectedVm!.machineId] = this.scheduledTasks[this.selectedVm!.machineId].filter(
           t => t !== task
         );
       }, delay);
     }else{
-      //if in the past then get rid of task
-      this.scheduledTasks[this.selectedVm.id] = this.scheduledTasks[this.selectedVm.id].filter(
+      //if in the past then get rmachineId of task
+      this.scheduledTasks[this.selectedVm.machineId] = this.scheduledTasks[this.selectedVm.machineId].filter(
         t => t !== task
       );
     }
@@ -81,28 +110,8 @@ export class MachinesPageComponent {
     this.scheduleModal.hide();
   }
 
-     // Filters
-    filterName = '';
-    filterState = '';
-    filterDateFrom = '';
-    filterDateTo = '';
 
-    // Add new VM popup
-    showAddForm = false;
-    newVmName = '';
 
-    states = ['Running', 'Stopped', 'Crashed', 'Restarting', 'Turning off', 'Turning on'];
-
-    get filteredVmList(): Machine[] {
-      return this.vmList.filter(vm => {
-            const matchesName =
-              !this.filterName || vm.name.toLowerCase().includes(this.filterName.toLowerCase());
-            const matchesState = !this.filterState || vm.state === this.filterState;
-            const matchesDateFrom = !this.filterDateFrom || vm.date >= this.filterDateFrom;
-            const matchesDateTo = !this.filterDateTo || vm.date <= this.filterDateTo;
-            return matchesName && matchesState && matchesDateFrom && matchesDateTo;
-          });
-    }
 
     addVm() {
       this.machineService.createMachine(this.newVmName);
@@ -114,26 +123,25 @@ export class MachinesPageComponent {
 
     shutdown(vm: Machine) {
       //maybe have timeout, inform user that it is in the process of turning off
-      vm.state = 'Turning off';
-      this.machineService.updateMachineState(vm,"Stopped");
+      vm.state = 'TURNING_OFF';
+      this.machineService.turnOff(vm.machineId);
     }
 
     turnon(vm: Machine){
-      vm.state = 'Turning on'
-      this.machineService.updateMachineState(vm,"Running");
+      this.machineSocketService.turnOn(vm.machineId);
     }
 
     //this should be turn on
     restart(vm: Machine) {
-      vm.state = 'Restarting';
-      this.machineService.updateMachineState(vm,"Running");
+      vm.state = 'RESTARTING';
+      this.machineService.restart(vm.machineId);
     }
 
   isRunning(vm:Machine) {
-    return vm.state === 'Running' || vm.state === 'Crashed';
+    return vm.state === 'RUNNING' || vm.state === 'CRASHED';
   }
 
   isStopped(vm:Machine) {
-    return vm.state === 'Stopped';
+    return vm.state === 'STOPPED';
   }
 }

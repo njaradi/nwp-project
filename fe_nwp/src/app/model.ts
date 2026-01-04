@@ -1,9 +1,9 @@
 export interface Machine {
-  id: number;
+  machineId: number;
   name: string;
   state: string;
-  date: string;
-  author: string;
+  createdAt: Date;
+  user: User;
   active: boolean;
   // todo: Masina kao entitet sadrzi sledece atribute:
   //  ID, stanje (slobodna/zauzeta), napravioJe (id korisnika), aktivna (true/false)
@@ -11,8 +11,8 @@ export interface Machine {
 
 
 export interface User {
-  id: number;
-  name: string;
+  userId: number;
+  username: string;
   email: string;
   role: string;
   // todo: pri kreiranju korisnika potrebno je popuniti i koje (sve) dozvole ima
@@ -26,3 +26,13 @@ export interface Error {
   operation: string;
   message: string;
 }
+
+export interface LoginRequest {
+  username: string;
+  password: string;
+}
+
+export interface TokenResponse {
+  token: string;
+}
+

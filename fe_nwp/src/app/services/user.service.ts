@@ -14,21 +14,19 @@ export class UserService{
 
   constructor() {
     this.usersSubject.next([
-      { id: 1, name: 'Alice', email: 'alice@example.com', role: 'Admin' },
-      { id: 2, name: 'Bob', email: 'bob@example.com', role: 'User' }
     ]);
   }
 
   getUserById(id: number): User | undefined {
     const currentUsers = this.usersSubject.value;
-    return currentUsers.find(user => user.id === id);
+    return currentUsers.find(user => user.userId === id);
   }
 
   updateUser(updatedUser: User){
     const currentUsers = this.usersSubject.value;
 
     const updatedList = currentUsers.map(user =>
-      user.id === updatedUser.id ? updatedUser : user
+      user.userId === updatedUser.userId ? updatedUser : user
     );
 
     this.usersSubject.next(updatedList);
@@ -42,7 +40,7 @@ export class UserService{
   }
   deleteUser(id: number){
     const currentUsers = this.usersSubject.value;
-    const updatedList = currentUsers.filter(user => user.id !== id);
+    const updatedList = currentUsers.filter(user => user.userId !== id);
 
     this.usersSubject.next(updatedList);
   }

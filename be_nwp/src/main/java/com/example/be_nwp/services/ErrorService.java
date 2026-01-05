@@ -15,7 +15,12 @@ public class ErrorService implements IService<ErrorMessage, Long> {
         this.errorRepository = errorRepository;
     }
 
-    public List<ErrorMessage> findMyErrors(Long userId) {return errorRepository.findByMachineUserUserId(userId);}
+    public List<ErrorMessage> findMyErrors(Long userId, String userRole) {
+        if(userRole.equals("ADMIN"))
+            return (List<ErrorMessage>) errorRepository.findAll();
+        else
+            return errorRepository.findByMachineUserUserId(userId);
+    }
 
     @Override
     public ErrorMessage save(ErrorMessage errorMessage) {

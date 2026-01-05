@@ -31,7 +31,7 @@ public class ErrorRestController {
     @GetMapping(value = "/my",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public List<ErrorMessage> getMyErrors() {
-        return errorService.findMyErrors(currentUserProvider.getUserId());
+        return errorService.findMyErrors(currentUserProvider.getUserId(),currentUserProvider.getRole());
     }
 
     @Authorized(roles = {"ADMIN","MODERATOR","USER"})

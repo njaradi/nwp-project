@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -87,6 +88,7 @@ public class MachineService implements IService<Machine, Long>{
 
     public List<Machine> filterMachines(
             Long userId,
+            String role,
             String name,
             State state,
             LocalDate from,
@@ -94,13 +96,19 @@ public class MachineService implements IService<Machine, Long>{
     ) {
         LocalDateTime fromDateTime = from != null ? from.atStartOfDay() : null;
         LocalDateTime toDateTime = to != null ? to.atTime(23, 59, 59) : null;
-        return machineRepository.filterMachines(
+        if(Objects.equals(role, "ADMIN"))
+            return machineRepository.filterAllMachines(
+                    name,
+                    state,
+                    fromDateTime,
+                    toDateTime);
+        else
+            return machineRepository.filterMachines(
                 userId,
                 name,
                 state,
                 fromDateTime,
-                toDateTime
-        );
+                toDateTime);
     }
 
 

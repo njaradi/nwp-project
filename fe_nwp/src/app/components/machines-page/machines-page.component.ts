@@ -5,7 +5,6 @@ import { Modal } from 'bootstrap';
 import {MachineSocketService} from "../../services/machine-socket.service";
 import {ScheduleService} from "../../services/schedule.service";
 import {AuthService} from "../../services/auth.service";
-//todo: schedule stuff
 
 @Component({
   selector: 'app-machines-page',

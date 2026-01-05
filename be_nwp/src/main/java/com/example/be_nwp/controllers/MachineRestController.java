@@ -3,6 +3,7 @@ package com.example.be_nwp.controllers;
 import com.example.be_nwp.annotations.Authorized;
 import com.example.be_nwp.annotations.OwnsMachine;
 import com.example.be_nwp.model.Machine;
+import com.example.be_nwp.model.Role;
 import com.example.be_nwp.model.State;
 import com.example.be_nwp.model.User;
 import com.example.be_nwp.services.MachineService;
@@ -55,7 +56,8 @@ public class MachineRestController {
             @RequestParam(required = false) LocalDate to
     ) {
         Long userId = currentUserProvider.getUserId();
-        return machineService.filterMachines(userId, name, state, from, to);
+        String userRole = currentUserProvider.getRole();
+        return machineService.filterMachines(userId, userRole, name, state, from, to);
     }
 
 
@@ -130,7 +132,7 @@ public class MachineRestController {
             return ResponseEntity.ok("Machine restarted...");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Failed to restart machine");  // todo: ovde (i kasnije na zakazanim operacijama) ide Error Log
+                    .body("Failed to restart machine");
         }
     }
 

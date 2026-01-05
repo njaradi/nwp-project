@@ -42,4 +42,20 @@ public interface MachineRepository extends CrudRepository<Machine, Long> {
             @Param("to") LocalDateTime to
     );
 
+    @Query("""
+    SELECT m FROM Machine m
+    WHERE
+       (:name IS NULL OR LOWER(m.name) LIKE LOWER(CONCAT('%', :name, '%')))
+      AND (:state IS NULL OR m.state = :state)
+      AND (:from IS NULL OR m.created_at >= :from)
+      AND (:to IS NULL OR m.created_at <= :to)
+      AND (m.active = true)
+""")
+    List<Machine> filterAllMachines(
+            @Param("name") String name,
+            @Param("state") State state,
+            @Param("from") LocalDateTime from,
+            @Param("to") LocalDateTime to
+    );
+
 }

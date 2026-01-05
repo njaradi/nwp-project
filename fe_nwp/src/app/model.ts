@@ -5,8 +5,6 @@ export interface Machine {
   created_at: Date;
   user: User;
   active: boolean;
-  // todo: Masina kao entitet sadrzi sledece atribute:
-  //  ID, stanje (slobodna/zauzeta), napravioJe (id korisnika), aktivna (true/false)
 }
 
 export interface User {
@@ -15,8 +13,6 @@ export interface User {
   email: string;
   role: string;
   password: string;
-  // todo: pri kreiranju korisnika potrebno je popuniti i koje (sve) dozvole ima
-  //  novi korisnik, jesmo li to mislili sa ovim role? ili ostavljamo za kasnije?
 }
 
 export interface ErrorMessage {

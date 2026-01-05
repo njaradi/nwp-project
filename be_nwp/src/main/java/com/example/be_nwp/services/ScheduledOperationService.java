@@ -56,7 +56,7 @@ public class ScheduledOperationService {
                 } catch (InterruptedException e) {
                     errorMessage.setMessage(e.getMessage());
                     errorService.save(errorMessage);
-                    throw new RuntimeException(e);//todo: error thing
+                    throw new RuntimeException(e);
                 }
             }
             else if(operation == Operation.OFF) {
@@ -109,7 +109,7 @@ public class ScheduledOperationService {
     }
 
     @PostConstruct
-    public void rescheduleAll() {//todo: ?????? pogledaj kasnije
+    public void rescheduleAll() {
         scheduledOperationRepository.findAll().forEach(this::schedule);
     }
 }

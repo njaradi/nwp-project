@@ -15,7 +15,6 @@ public class JwtUtil {
 
     public String generateToken(User user) {
         long EXPIRATION = 1000 * 60 * 60 * 24; // 1h*24
-        //todo: dodati jos claimova?
         return Jwts.builder()
                 .setSubject(user.getUsername())
                 .claim("role", user.getRole())

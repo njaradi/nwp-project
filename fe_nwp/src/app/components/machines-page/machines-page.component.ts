@@ -1,8 +1,10 @@
 import { Component } from '@angular/core';
-import {Machine} from "../../model";
+import {Machine, ScheduledOperation} from "../../model";
 import {MachineService} from "../../services/machine.service";
 import { Modal } from 'bootstrap';
 import {MachineSocketService} from "../../services/machine-socket.service";
+import {ScheduleService} from "../../services/schedule.service";
+import {AuthService} from "../../services/auth.service";
 //todo: schedule stuff
 
 @Component({
@@ -21,7 +23,10 @@ export class MachinesPageComponent {
   operations = ['ON', 'OFF', 'RESTART'];
   scheduleModal: any;
 
-  constructor(private machineService: MachineService, private machineSocketService: MachineSocketService) {}
+  constructor(private machineService: MachineService,
+              private machineSocketService: MachineSocketService,
+              private scheduleService: ScheduleService,
+              private authService: AuthService) {}
   ngOnInit(): void {
     this.loadMachines();
     this.machineSocketService.onMachineUpdates().subscribe(machine => {
@@ -49,7 +54,7 @@ export class MachinesPageComponent {
   showAddForm = false;
   newVmName = '';
 
-  states = ['RUNNING', 'STOPPED', 'CRASHED', 'RESTARTING', 'TURNING_OFF', 'TURNNNING_ON'];
+  states = ['RUNNING', 'STOPPED', 'CRASHED', 'RESTARTING', 'TURNING_OFF', 'TURNING_ON'];
 
 
   loadMachines(): void {
@@ -73,42 +78,49 @@ export class MachinesPageComponent {
   scheduleOperation() {
     if (!this.selectedVm || !this.selectedOperation || !this.selectedDateTime) return;
 
-    //initialize array if none exists
-    if (!this.scheduledTasks[this.selectedVm.machineId]) {
-      this.scheduledTasks[this.selectedVm.machineId] = [];
-    }
 
-    //add new task
-    const task = {
-      operation: this.selectedOperation,
-      dateTime: this.selectedDateTime
-    };
-    this.scheduledTasks[this.selectedVm.machineId].push(task);
+    // Get the actual User object from your token
+    const user$ = this.authService.getUserFromToken();
+    if (!user$) return; // user not logged in?
 
-    console.log(`Scheduled ${this.selectedOperation} for ${this.selectedVm.name} at ${this.selectedDateTime}`);
+    const dateTime = new Date(this.selectedDateTime);
+    const cron = this.toCron(dateTime);
 
-    // Here you could save to backend, or trigger a local timeout for testing:
-    const delay = new Date(this.selectedDateTime).getTime() - Date.now();
-    if (delay > 0) {
-      setTimeout(() => {
-        if (this.selectedOperation === 'ON') this.turnon(this.selectedVm!);
-        else if (this.selectedOperation === 'OFF') this.shutdown(this.selectedVm!);
-        else if (this.selectedOperation === 'RESTART') this.restart(this.selectedVm!);
+    user$.subscribe(user => {
+      if (!user) return; // handle null user
 
-        // Remove the task from the scheduledTasks so label disappears
-        this.scheduledTasks[this.selectedVm!.machineId] = this.scheduledTasks[this.selectedVm!.machineId].filter(
-          t => t !== task
-        );
-      }, delay);
-    }else{
-      //if in the past then get rmachineId of task
-      this.scheduledTasks[this.selectedVm.machineId] = this.scheduledTasks[this.selectedVm.machineId].filter(
-        t => t !== task
-      );
-    }
+      // Prepare the ScheduledOperation object
+      const op: ScheduledOperation = {
+        machine: this.selectedVm!,
+        operation: this.selectedOperation!,
+        status: 'PENDING',
+        cron: cron,            // optional, fill if you use cron
+        createdBy: user
+      };
 
-    this.scheduleModal.hide();
+      // Call backend to save it
+      this.scheduleService.createSchedule(op).subscribe({
+        next: createdOp => {
+          console.log('Scheduled operation saved to backend:', createdOp);
+
+          // initialize array if none exists
+          if (!this.scheduledTasks[this.selectedVm!.machineId]) {
+            this.scheduledTasks[this.selectedVm!.machineId] = [];
+          }
+
+          // add to local array for UI display
+          this.scheduledTasks[this.selectedVm!.machineId].push({
+            operation: this.selectedOperation,
+            dateTime: this.selectedDateTime
+          });
+
+          this.scheduleModal.hide();
+        },
+        error: err => console.error('Failed to schedule operation', err)
+      });
+    });
   }
+
 
 
 
@@ -151,5 +163,14 @@ export class MachinesPageComponent {
 
   isStopped(vm:Machine) {
     return vm.state === 'STOPPED';
+  }
+
+  toCron(date: Date): string {
+    const minute = date.getMinutes();
+    const hour = date.getHours();
+    const day = date.getDate();
+    const month = date.getMonth() + 1; // JS months are 0-based
+
+    return `0 ${minute} ${hour} ${day} ${month} ?`;
   }
 }

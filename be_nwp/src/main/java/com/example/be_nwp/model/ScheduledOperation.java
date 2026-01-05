@@ -2,9 +2,6 @@ package com.example.be_nwp.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import org.springframework.data.annotation.CreatedDate;
-
-import java.time.LocalDateTime;
 
 @Data
 @Entity

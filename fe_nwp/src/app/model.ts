@@ -9,7 +9,6 @@ export interface Machine {
   //  ID, stanje (slobodna/zauzeta), napravioJe (id korisnika), aktivna (true/false)
 }
 
-
 export interface User {
   userId: number;
   username: string;
@@ -35,5 +34,14 @@ export interface LoginRequest {
 
 export interface TokenResponse {
   token: string;
+}
+
+export interface ScheduledOperation {
+  scheduledId?: number;
+  machine: Machine;
+  operation: string;
+  status: string;
+  cron: string;
+  createdBy: User;
 }
 

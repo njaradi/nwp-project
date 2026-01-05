@@ -1,7 +1,10 @@
 future fixes
-hashirati sifru, cuvamo je raw
+
 forbidden status kad user udje na /users i te stvari
 schedule ne updateuje front kad krene i zavrsi operaciju
+
+user ne vidi users tab
+moderator ne vidi delete i add user
 
 login stranica se pretvori u log out dugme
 admin vidi userId na masina karticama i errorima

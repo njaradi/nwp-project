@@ -23,13 +23,13 @@ export class MachinesPageComponent {
 
   constructor(private machineService: MachineService, private machineSocketService: MachineSocketService) {}
   ngOnInit(): void {
-
+    this.loadMachines();
     this.machineSocketService.onMachineUpdates().subscribe(machine => {
       console.log('Machine updated:', machine);
-      // update your vmList here if needed
+      this.loadMachines();
     });
 
-    this.loadMachines();
+
 
     setTimeout(() => {
       const modalEl = document.getElementById('scheduleModal');
@@ -130,19 +130,19 @@ export class MachinesPageComponent {
 
 
   shutdown(vm: Machine) {
-      //maybe have timeout, inform user that it is in the process of turning off
-      vm.state = 'TURNING_OFF';
-      this.machineService.turnOff(vm.machineId).subscribe();
+    vm.state = 'TURNING_OFF';
+      this.machineSocketService.turnOff(vm.machineId);
     }
 
     turnon(vm: Machine){
+      vm.state = 'TURNING_ON';
       this.machineSocketService.turnOn(vm.machineId);
     }
 
     //this should be turn on
     restart(vm: Machine) {
       vm.state = 'RESTARTING';
-      this.machineService.restart(vm.machineId).subscribe();
+      this.machineSocketService.restart(vm.machineId);
     }
 
   isRunning(vm:Machine) {

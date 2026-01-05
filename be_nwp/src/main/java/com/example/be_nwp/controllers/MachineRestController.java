@@ -97,9 +97,8 @@ public class MachineRestController {
         return ResponseEntity.ok().build();
     }
 
-    //@Authorized(roles = {"ADMIN","MODERATOR","USER"})
-    //@OwnsMachine
-    @MessageMapping("/machines/{id}/on") // client sends here
+
+    @MessageMapping("/machines/{id}/on")
     @SendTo("/topic/machines")
     public ResponseEntity<?> turnOnMachine(@DestinationVariable Long id){
         try {
@@ -111,10 +110,9 @@ public class MachineRestController {
         }
     }
 
-    //@Authorized(roles = {"ADMIN","MODERATOR","USER"})
-    //@OwnsMachine
-    @PostMapping(value="/{id}/off")
-    public ResponseEntity<?> turnOffMachine(@PathVariable("id") Long id) {
+    @MessageMapping("/machines/{id}/off")
+    @SendTo("/topic/machines")
+    public ResponseEntity<?> turnOffMachine(@DestinationVariable Long id) {
         try {
             machineService.turnOffMachine(id);
             return ResponseEntity.ok("Machine stopped...");
@@ -124,10 +122,9 @@ public class MachineRestController {
         }
     }
 
-    //@Authorized(roles = {"ADMIN","MODERATOR","USER"})
-    //@OwnsMachine
-    @PostMapping(value="/{id}/restart")
-    public ResponseEntity<?> restartMachine(@PathVariable("id") Long id){
+    @MessageMapping("/machines/{id}/restart")
+    @SendTo("/topic/machines")
+    public ResponseEntity<?> restartMachine(@DestinationVariable Long id){
         try {
             machineService.restartMachine(id);
             return ResponseEntity.ok("Machine restarted...");

@@ -33,7 +33,21 @@ export class MachineSocketService {
   turnOn(id: number) {
     this.client.publish({
       destination: `/app/machines/${id}/on`,
-      body: '' // you can pass more data if needed
+      body: ''
+    });
+  }
+
+  turnOff(id: number) {
+    this.client.publish({
+      destination: `/app/machines/${id}/off`,
+      body: ''
+    });
+  }
+
+  restart(id: number) {
+    this.client.publish({
+      destination: `/app/machines/${id}/restart`,
+      body: ''
     });
   }
 }

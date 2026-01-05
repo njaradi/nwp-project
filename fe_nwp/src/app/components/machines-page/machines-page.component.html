@@ -3,22 +3,22 @@
   <!-- Filter Row -->
   <div class="row g-2 mb-3 align-items-center">
     <div class="col-md-3">
-      <input type="text" class="form-control" placeholder="Filter by name" [(ngModel)]="filterName">
+      <input type="text" class="form-control" placeholder="Filter by name" [(ngModel)]="filterName"  (ngModelChange)="loadMachines()">
     </div>
 
     <div class="col-md-2">
-      <select class="form-select" [(ngModel)]="filterState">
+      <select class="form-select" [(ngModel)]="filterState" (ngModelChange)="loadMachines()">
         <option value="">All states</option>
         <option *ngFor="let s of states" [value]="s">{{ s }}</option>
       </select>
     </div>
 
     <div class="col-md-3">
-      <input type="date" class="form-control" [(ngModel)]="filterDateFrom" placeholder="From date">
+      <input type="date" class="form-control" [(ngModel)]="filterDateFrom" placeholder="From date" (ngModelChange)="loadMachines()">
     </div>
 
     <div class="col-md-3">
-      <input type="date" class="form-control" [(ngModel)]="filterDateTo" placeholder="To date">
+      <input type="date" class="form-control" [(ngModel)]="filterDateTo" placeholder="To date" (ngModelChange)="loadMachines()">
     </div>
   </div>
 

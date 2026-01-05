@@ -13,8 +13,8 @@
     </thead>
     <tbody>
     <tr *ngFor="let e of errors">
-      <td>{{ e.machineName}}</td>
-      <td>{{ e.date }}</td>
+      <td>{{ e.machine.name}}</td>
+      <td>{{ e.timestamp }}</td>
       <td>{{ e.operation }}</td>
       <td>{{ e.message }}</td>
     </tr>

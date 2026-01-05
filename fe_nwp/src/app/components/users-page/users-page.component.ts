@@ -23,6 +23,10 @@ export class UsersPageComponent implements OnInit{
 
 
   deleteUser(id: number) {
-    this.userService.deleteUser(id).subscribe();
+    this.userService.deleteUser(id).subscribe({
+      next: () => this.loadUsers(),
+      error: err => console.error(err)
+    });
+
   }
 }

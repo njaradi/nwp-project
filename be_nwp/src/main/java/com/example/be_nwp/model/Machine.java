@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.ToString;
+import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
@@ -22,10 +23,10 @@ public class Machine {
     @Enumerated(EnumType.STRING)
     @Column
     private State state;
+
     @Column
-    @CreatedDate
-    //@JsonProperty()todo?
-    private LocalDateTime createdAt;
+    @CreationTimestamp
+    private LocalDateTime created_at;
 
     @Column
     private boolean active;

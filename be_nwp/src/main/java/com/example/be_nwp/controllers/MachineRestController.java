@@ -4,6 +4,7 @@ import com.example.be_nwp.annotations.Authorized;
 import com.example.be_nwp.annotations.OwnsMachine;
 import com.example.be_nwp.model.Machine;
 import com.example.be_nwp.model.State;
+import com.example.be_nwp.model.User;
 import com.example.be_nwp.services.MachineService;
 import com.example.be_nwp.utils.CurrentUserProvider;
 import org.springframework.http.HttpStatus;
@@ -74,6 +75,9 @@ public class MachineRestController {
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public Machine createMachine(@RequestBody Machine machine) {
+        User user = new User();
+        user.setUserId(currentUserProvider.getUserId());
+        machine.setUser(user);
         return machineService.save(machine);
     }
 

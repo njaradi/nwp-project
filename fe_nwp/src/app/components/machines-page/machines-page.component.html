@@ -55,7 +55,7 @@
         <div class="card-body">
           <h5 class="card-title">{{ vm.name }}</h5>
           <p class="card-text mb-1"><strong>State:</strong> {{ vm.state }}</p>
-          <p class="card-text"><strong>Date:</strong> {{ vm.createdAt }}</p>
+          <p class="card-text"><strong>Date:</strong> {{ vm.created_at }}</p>
 
           <div class="d-flex flex-wrap gap-2">
             <button *ngIf="isStopped(vm)" class="btn btn-outline-success btn-sm" (click)="turnon(vm)">Turn on</button>

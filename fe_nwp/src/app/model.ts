@@ -2,7 +2,7 @@ export interface Machine {
   machineId: number;
   name: string;
   state: string;
-  createdAt: Date;
+  created_at: Date;
   user: User;
   active: boolean;
   // todo: Masina kao entitet sadrzi sledece atribute:
@@ -20,10 +20,10 @@ export interface User {
   //  novi korisnik, jesmo li to mislili sa ovim role? ili ostavljamo za kasnije?
 }
 
-export interface Error {
-  id: number;
-  machineName: string,
-  date: string;
+export interface ErrorMessage {
+  errorId: number;
+  machine: Machine,
+  timestamp: string;
   operation: string;
   message: string;
 }

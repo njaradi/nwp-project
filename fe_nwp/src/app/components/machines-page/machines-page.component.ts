@@ -113,18 +113,26 @@ export class MachinesPageComponent {
 
 
 
-    addVm() {
-      this.machineService.createMachine(this.newVmName);
-    }
+  addVm() {
+    console.log("addVm fun")
+    this.machineService.createMachine(this.newVmName).subscribe({
+      next: () => this.loadMachines(),
+      error: err => console.error(err)
+    });
+  }
 
-    deleteVm(id: number) {
-      this.machineService.deleteMachine(id);
-    }
+  deleteVm(id: number) {
+    this.machineService.deleteMachine(id).subscribe({
+      next: () => this.loadMachines(),
+      error: err => console.error('Delete failed', err)
+    });
+  }
 
-    shutdown(vm: Machine) {
+
+  shutdown(vm: Machine) {
       //maybe have timeout, inform user that it is in the process of turning off
       vm.state = 'TURNING_OFF';
-      this.machineService.turnOff(vm.machineId);
+      this.machineService.turnOff(vm.machineId).subscribe();
     }
 
     turnon(vm: Machine){
@@ -134,7 +142,7 @@ export class MachinesPageComponent {
     //this should be turn on
     restart(vm: Machine) {
       vm.state = 'RESTARTING';
-      this.machineService.restart(vm.machineId);
+      this.machineService.restart(vm.machineId).subscribe();
     }
 
   isRunning(vm:Machine) {

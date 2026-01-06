@@ -3,8 +3,8 @@ package com.example.be_nwp.services;
 import com.example.be_nwp.model.Machine;
 import com.example.be_nwp.model.User;
 import com.example.be_nwp.repositories.UserRepository;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.mindrot.jbcrypt.BCrypt;
 
 import java.util.List;
 import java.util.Optional;
@@ -12,7 +12,6 @@ import java.util.Optional;
 @Service
 public class UserService implements IService<User,Long>{
     private final UserRepository userRepository;
-    BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -20,7 +19,7 @@ public class UserService implements IService<User,Long>{
 
     @Override
     public User save(User user) {
-        user.setPassword(encoder.encode(user.getPassword()));
+        user.setPassword(BCrypt.hashpw(user.getPassword(), BCrypt.gensalt()));
         return userRepository.save(user);
     }
 

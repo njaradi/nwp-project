@@ -5,15 +5,15 @@ import com.example.be_nwp.dtos.TokenResponse;
 import com.example.be_nwp.model.User;
 import com.example.be_nwp.repositories.UserRepository;
 import com.example.be_nwp.utils.JwtUtil;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import org.mindrot.jbcrypt.BCrypt;
 
 @Service
 public class AuthService {
 
     private final UserRepository userRepository;
     private final JwtUtil jwtUtil;
-    private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
     public AuthService(UserRepository userRepository, JwtUtil jwtUtil) {
         this.userRepository = userRepository;
@@ -28,7 +28,7 @@ public class AuthService {
         if(user == null) {
             throw new RuntimeException("User not found");
         }
-        if (!encoder.matches(request.password(), user.getPassword())) {
+        if (!BCrypt.checkpw(request.password(), user.getPassword())) {
             throw new RuntimeException("Invalid credentials");
         }
         if(!user.getActive()){

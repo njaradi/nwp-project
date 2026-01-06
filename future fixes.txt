@@ -2,6 +2,7 @@ future fixes
 
 forbidden status kad user udje na /users i te stvari
 schedule ne updateuje front kad krene i zavrsi operaciju
+load kad se doda user
 
 user ne vidi users tab
 moderator ne vidi delete i add user
